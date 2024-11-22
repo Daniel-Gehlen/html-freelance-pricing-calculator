@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 50px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    max-height: 100vh; /* Adicionado para limitar a altura do container */
+    overflow-y: scroll; /* Adicionado para permitir rolagem vertical */
+    scrollbar-width: none; /* Para navegadores baseados em Firefox */
+    -ms-overflow-style: none; /* Para navegadores baseados em Internet Explorer e Edge */
+}
+
+.container::-webkit-scrollbar {
+    display: none; /* Para navegadores baseados em WebKit (Chrome, Safari, etc.) */
+}
+
+h1, h2 {
+    color: #333;
+    position: sticky; /* Adicionado para fixar os títulos */
+    top: 0; /* Adicionado para fixar no topo */
+    background-color: #fff; /* Adicionado para manter o fundo branco */
+    padding: 10px 0; /* Adicionado para espaçamento */
+    margin: 0; /* Adicionado para remover margens padrão */
+    z-index: 1; /* Adicionado para garantir que fique acima dos outros elementos */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.hidden {
+    display: none;
+}
+
+#results {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e9f7ef;
+    border-radius: 4px;
+}
+
+#results p {
+    margin: 5px 0;
+}
+
+.crud-section {
+    margin-bottom: 20px;
+}
+
+#fixedCostsList, #variableCostsList, #workingHoursList {
+    margin-bottom: 10px;
+}

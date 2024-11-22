@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precificação Freelancer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Precificação Freelancer</h1>
+        
+        <div class="crud-section">
+            <h2>Custos Fixos</h2>
+            <div id="fixedCostsList"></div>
+            <input type="text" id="newFixedCostDescription" placeholder="Descrição do Custo Fixo">
+            <input type="number" id="newFixedCost" placeholder="Novo Custo Fixo">
+            <button onclick="addFixedCost()">Adicionar</button>
+            <button onclick="editFixedCost()">Editar</button>
+            <button onclick="deleteFixedCost()">Excluir</button>
+        </div>
+
+        <div class="crud-section">
+            <h2>Custos Variáveis</h2>
+            <div id="variableCostsList"></div>
+            <input type="text" id="newVariableCostDescription" placeholder="Descrição do Custo Variável">
+            <input type="number" id="newVariableCost" placeholder="Novo Custo Variável">
+            <button onclick="addVariableCost()">Adicionar</button>
+            <button onclick="editVariableCost()">Editar</button>
+            <button onclick="deleteVariableCost()">Excluir</button>
+        </div>
+
+        <div class="crud-section">
+            <h2>Horas Úteis</h2>
+            <div id="workingHoursList"></div>
+            <input type="text" id="newWorkingHourDescription" placeholder="Descrição da Hora Útil">
+            <input type="number" id="newWorkingHour" placeholder="Nova Hora Útil">
+            <button onclick="addWorkingHour()">Adicionar</button>
+            <button onclick="editWorkingHour()">Editar</button>
+            <button onclick="deleteWorkingHour()">Excluir</button>
+        </div>
+
+        <div class="crud-section">
+            <h2>Meta Salarial</h2>
+            <input type="number" id="salaryGoal" placeholder="Meta Salarial Líquida">
+            <button onclick="calculate()">Calcular</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <h2>Resultados</h2>
+            <p>Valor Hora Base: <span id="hourlyRate"></span></p>
+            <p>Valor Total Mensal: <span id="totalMonthly"></span></p>
+            <p>Valor Total do Projeto: <span id="projectTotal"></span></p>
+            <p>Relatório Detalhado:</p>
+            <pre id="detailedReport"></pre>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -2,60 +2,67 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Precificação Freelancer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Calculadora de Precificação Freelancer</h1>
-        
-        <div class="crud-section">
-            <h2>Custos Fixos</h2>
-            <div id="fixedCostsList"></div>
-            <input type="text" id="newFixedCostDescription" placeholder="Descrição do Custo Fixo">
-            <input type="number" id="newFixedCost" placeholder="Novo Custo Fixo">
-            <button onclick="addFixedCost()">Adicionar</button>
-            <button onclick="editFixedCost()">Editar</button>
-            <button onclick="deleteFixedCost()">Excluir</button>
-        </div>
 
-        <div class="crud-section">
-            <h2>Custos Variáveis</h2>
-            <div id="variableCostsList"></div>
-            <input type="text" id="newVariableCostDescription" placeholder="Descrição do Custo Variável">
-            <input type="number" id="newVariableCost" placeholder="Novo Custo Variável">
-            <button onclick="addVariableCost()">Adicionar</button>
-            <button onclick="editVariableCost()">Editar</button>
-            <button onclick="deleteVariableCost()">Excluir</button>
-        </div>
+        <form id="pricingForm">
+            <div class="crud-section">
+                <h2>Custos Fixos</h2>
+                <div id="fixedCostsList"></div>
+                <label for="newFixedCostDescription">Descrição do Custo Fixo</label>
+                <input type="text" id="newFixedCostDescription" placeholder="Ex: Aluguel de escritório">
+                <label for="newFixedCost">Valor do Custo Fixo (R$)</label>
+                <input type="number" id="newFixedCost" step="0.01" placeholder="Digite o valor do custo fixo">
+                <button type="button" onclick="addFixedCost()">Adicionar Custo Fixo</button>
+                <button type="button" onclick="editFixedCost()">Editar Custo Fixo</button>
+                <button type="button" onclick="deleteFixedCost()">Excluir Custo Fixo</button>
+            </div>
 
-        <div class="crud-section">
-            <h2>Horas Úteis</h2>
-            <div id="workingHoursList"></div>
-            <input type="text" id="newWorkingHourDescription" placeholder="Descrição da Hora Útil">
-            <input type="number" id="newWorkingHour" placeholder="Nova Hora Útil">
-            <button onclick="addWorkingHour()">Adicionar</button>
-            <button onclick="editWorkingHour()">Editar</button>
-            <button onclick="deleteWorkingHour()">Excluir</button>
-        </div>
+            <div class="crud-section">
+                <h2>Custos Variáveis</h2>
+                <div id="variableCostsList"></div>
+                <label for="newVariableCostDescription">Descrição do Custo Variável</label>
+                <input type="text" id="newVariableCostDescription" placeholder="Ex: Software de gerenciamento">
+                <label for="newVariableCost">Valor do Custo Variável (R$)</label>
+                <input type="number" id="newVariableCost" step="0.01" placeholder="Digite o valor do custo variável">
+                <button type="button" onclick="addVariableCost()">Adicionar Custo Variável</button>
+                <button type="button" onclick="editVariableCost()">Editar Custo Variável</button>
+                <button type="button" onclick="deleteVariableCost()">Excluir Custo Variável</button>
+            </div>
 
-        <div class="crud-section">
-            <h2>Meta Salarial</h2>
-            <input type="number" id="salaryGoal" placeholder="Meta Salarial Líquida">
-            <button onclick="calculate()">Calcular</button>
-        </div>
+            <div class="crud-section">
+                <h2>Horas Úteis</h2>
+                <div id="workingHoursList"></div>
+                <label for="newWorkingHourDescription">Descrição das Horas</label>
+                <input type="text" id="newWorkingHourDescription" placeholder="Ex: Horas disponíveis por mês">
+                <label for="newWorkingHour">Total de Horas Disponíveis por Mês</label>
+                <input type="number" id="newWorkingHour" step="0.5" placeholder="Digite o número total de horas disponíveis">
+                <button type="button" onclick="addWorkingHour()">Adicionar Horas</button>
+                <button type="button" onclick="editWorkingHour()">Editar Horas</button>
+                <button type="button" onclick="deleteWorkingHour()">Excluir Horas</button>
+            </div>
 
-        <div id="results" class="hidden">
-            <h2>Resultados</h2>
-            <p>Valor Hora Base: <span id="hourlyRate"></span></p>
-            <p>Valor Total Mensal: <span id="totalMonthly"></span></p>
-            <p>Valor Total do Projeto: <span id="projectTotal"></span></p>
-            <p>Relatório Detalhado:</p>
-            <pre id="detailedReport"></pre>
-        </div>
+            <div class="crud-section">
+                <h2>Meta Salarial</h2>
+                <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
+                <input type="number" id="salaryGoal" step="0.01" placeholder="Digite seu salário líquido mensal desejado">
+                <button type="submit">Calcular Precificação</button>
+            </div>
+
+            <div id="results" class="hidden">
+                <h2>Resultados</h2>
+                <p>Valor Hora Base: <span id="hourlyRate"></span></p>
+                <p>Valor Total Mensal: <span id="totalMonthly"></span></p>
+                <p>Valor Total do Projeto: <span id="projectTotal"></span></p>
+                <h3>Relatório Detalhado</h3>
+                <pre id="detailedReport"></pre>
+            </div>
+        </form>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

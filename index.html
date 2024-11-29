@@ -2,67 +2,93 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Precificação Freelancer</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <h1>Calculadora de Precificação Freelancer</h1>
+        <div class="row">
+            <div class="col">
+                <!-- Custos Fixos -->
+                <div class="crud-section">
+                    <h2>Custos Fixos</h2>
+                    <div id="fixedCostsList"></div>
+                    <div>
+                        <input type="text" id="newFixedCostDescription" placeholder="Descrição">
+                        <input type="number" id="newFixedCost" placeholder="Valor">
+                        <button onclick="addItem('fixedCostsList', 'newFixedCostDescription', 'newFixedCost', 'cost')">Adicionar</button>
+                    </div>
+                </div>
 
-        <form id="pricingForm">
-            <div class="crud-section">
-                <h2>Custos Fixos</h2>
-                <div id="fixedCostsList"></div>
-                <label for="newFixedCostDescription">Descrição do Custo Fixo</label>
-                <input type="text" id="newFixedCostDescription" placeholder="Ex: Aluguel de escritório">
-                <label for="newFixedCost">Valor do Custo Fixo (R$)</label>
-                <input type="number" id="newFixedCost" step="0.01" placeholder="Digite o valor do custo fixo">
-                <button type="button" onclick="addFixedCost()">Adicionar Custo Fixo</button>
-                <button type="button" onclick="editFixedCost()">Editar Custo Fixo</button>
-                <button type="button" onclick="deleteFixedCost()">Excluir Custo Fixo</button>
+                <!-- Custos Variáveis -->
+                <div class="crud-section">
+                    <h2>Custos Variáveis</h2>
+                    <div id="variableCostsList"></div>
+                    <div>
+                        <input type="text" id="newVariableCostDescription" placeholder="Descrição">
+                        <input type="number" id="newVariableCost" placeholder="Valor">
+                        <button onclick="addItem('variableCostsList', 'newVariableCostDescription', 'newVariableCost', 'cost')">Adicionar</button>
+                    </div>
+                </div>
+
+                <!-- Horas Úteis -->
+                <div class="crud-section">
+                    <h2>Horas Úteis</h2>
+                    <div id="workingHoursList"></div>
+                    <div>
+                        <input type="text" id="newWorkingHourDescription" placeholder="Descrição">
+                        <input type="number" id="newWorkingHour" placeholder="Horas por mês">
+                        <button onclick="addItem('workingHoursList', 'newWorkingHourDescription', 'newWorkingHour', 'hours')">Adicionar</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="crud-section">
-                <h2>Custos Variáveis</h2>
-                <div id="variableCostsList"></div>
-                <label for="newVariableCostDescription">Descrição do Custo Variável</label>
-                <input type="text" id="newVariableCostDescription" placeholder="Ex: Software de gerenciamento">
-                <label for="newVariableCost">Valor do Custo Variável (R$)</label>
-                <input type="number" id="newVariableCost" step="0.01" placeholder="Digite o valor do custo variável">
-                <button type="button" onclick="addVariableCost()">Adicionar Custo Variável</button>
-                <button type="button" onclick="editVariableCost()">Editar Custo Variável</button>
-                <button type="button" onclick="deleteVariableCost()">Excluir Custo Variável</button>
-            </div>
+            <div class="col">
+                <!-- Precificação -->
+                <div class="crud-section">
+                    <h2>Precificação</h2>
+                    <form id="pricingForm">
+                        <div class="input-group">
+                            <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
+                            <input type="number" id="salaryGoal" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="customHourlyRate">Valor Hora Personalizado (R$)</label>
+                            <input type="number" id="customHourlyRate" step="0.01">
+                        </div>
+                        <button type="button" onclick="calculate()">Calcular</button>
+                    </form>
+                </div>
 
-            <div class="crud-section">
-                <h2>Horas Úteis</h2>
-                <div id="workingHoursList"></div>
-                <label for="newWorkingHourDescription">Descrição das Horas</label>
-                <input type="text" id="newWorkingHourDescription" placeholder="Ex: Horas disponíveis por mês">
-                <label for="newWorkingHour">Total de Horas Disponíveis por Mês</label>
-                <input type="number" id="newWorkingHour" step="0.5" placeholder="Digite o número total de horas disponíveis">
-                <button type="button" onclick="addWorkingHour()">Adicionar Horas</button>
-                <button type="button" onclick="editWorkingHour()">Editar Horas</button>
-                <button type="button" onclick="deleteWorkingHour()">Excluir Horas</button>
+                <!-- Calendário -->
+                <div class="crud-section">
+                    <h2>Calendário de Trabalho</h2>
+                    <div id="calendar"></div>
+                    <div>
+                        <label for="extraDate">Data (para horas extras):</label>
+                        <input type="date" id="extraDate">
+                        <label for="extraHours">Horas Extras:</label>
+                        <input type="number" id="extraHours" step="0.5" min="0">
+                        <button onclick="addExtraHours()">Adicionar Horas Extras</button>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="crud-section">
-                <h2>Meta Salarial</h2>
-                <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
-                <input type="number" id="salaryGoal" step="0.01" placeholder="Digite seu salário líquido mensal desejado">
-                <button type="submit">Calcular Precificação</button>
+        <!-- Resultados -->
+        <div id="results" class="hidden">
+            <h2>Resultados</h2>
+            <div class="result-grid">
+                <div><strong>Valor Hora Base:</strong> <span id="hourlyRate"></span></div>
+                <div><strong>Valor Total do Projeto:</strong> <span id="projectTotal"></span></div>
             </div>
-
-            <div id="results" class="hidden">
-                <h2>Resultados</h2>
-                <p>Valor Hora Base: <span id="hourlyRate"></span></p>
-                <p>Valor Total Mensal: <span id="totalMonthly"></span></p>
-                <p>Valor Total do Projeto: <span id="projectTotal"></span></p>
-                <h3>Relatório Detalhado</h3>
-                <pre id="detailedReport"></pre>
-            </div>
-        </form>
+        </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

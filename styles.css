@@ -86,3 +86,41 @@ button:hover {
 #fixedCostsList, #variableCostsList, #workingHoursList {
     margin-bottom: 10px;
 }
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+button + .calendar-grid {
+    margin-top: 10px; /* Espaço entre o botão e os dias do calendário */
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+}
+
+.day {
+    border: 1px solid #ddd;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.day:hover {
+    background-color: #f0f0f0;
+}
+
+.work-day {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.empty-day {
+    background-color: #f9f9f9;
+}

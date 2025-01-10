@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precificação Freelancer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Calculadora de Precificação Freelancer</h1>
+        <div class="row">
+            <div class="col">
+                <!-- Custos Fixos -->
+                <div class="crud-section">
+                    <h2>Custos Fixos</h2>
+                    <p>
+                        Adicione aqui os custos fixos mensais que você tem, independentemente dos projetos.
+                        Esses são gastos recorrentes que você precisa cobrir todos os meses.
+                        <br>
+                        <strong>Exemplos:</strong> Aluguel do escritório (R$ 800,00), Internet (R$ 120,00), Software de
+                        desenvolvimento (R$ 200,00).
+                    </p>
+                    <div id="fixedCostsList"></div>
+                    <div>
+                        <input type="text" id="newFixedCostDescription"
+                            placeholder="Descrição (ex: Aluguel do escritório)">
+                        <input type="number" id="newFixedCost" placeholder="Valor (ex: 800.00)">
+                        <button
+                            onclick="addItem('fixedCostsList', 'newFixedCostDescription', 'newFixedCost', 'cost')">Adicionar</button>
+                    </div>
+                </div>
+
+                <!-- Custos Variáveis -->
+                <div class="crud-section">
+                    <h2>Custos Variáveis</h2>
+                    <p>
+                        Adicione aqui os custos que variam de acordo com o projeto. Esses são gastos que dependem
+                        do tipo de trabalho que você está realizando.
+                        <br>
+                        <strong>Exemplos:</strong> Hospedagem de servidor (R$ 50,00 por projeto), Licenças de software
+                        (R$ 100,00 por projeto).
+                    </p>
+                    <div id="variableCostsList"></div>
+                    <div>
+                        <input type="text" id="newVariableCostDescription"
+                            placeholder="Descrição (ex: Hospedagem de servidor)">
+                        <input type="number" id="newVariableCost" placeholder="Valor (ex: 50.00)">
+                        <button
+                            onclick="addItem('variableCostsList', 'newVariableCostDescription', 'newVariableCost', 'cost')">Adicionar</button>
+                    </div>
+                </div>
+
+                <!-- Horas Úteis -->
+                <div class="crud-section">
+                    <h2>Horas Úteis</h2>
+                    <p>
+                        Adicione aqui as atividades que você realiza e quantas horas por mês dedica a cada uma.
+                        Isso ajudará a calcular quanto tempo você tem disponível para trabalhar.
+                        <br>
+                        <strong>Exemplos:</strong> Desenvolvimento de código (80 horas/mês), Reuniões com clientes (10
+                        horas/mês).
+                    </p>
+                    <div id="workingHoursList"></div>
+                    <div>
+                        <input type="text" id="newWorkingHourDescription"
+                            placeholder="Descrição (ex: Desenvolvimento de código)">
+                        <input type="number" id="newWorkingHour" placeholder="Horas por mês (ex: 80)">
+                        <button
+                            onclick="addItem('workingHoursList', 'newWorkingHourDescription', 'newWorkingHour', 'hours')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <!-- Precificação -->
+                <div class="crud-section">
+                    <h2>Precificação</h2>
+                    <p>
+                        Escolha como deseja calcular o valor do projeto:
+                    </p>
+                    <div>
+                        <label>
+                            <input type="radio" name="calculationType" value="salary" checked onclick="toggleCalculationType('salary')">
+                            Com base no Salário Líquido Desejado
+                        </label>
+                        <label>
+                            <input type="radio" name="calculationType" value="hourlyRate" onclick="toggleCalculationType('hourlyRate')">
+                            Com base no Valor Hora Personalizado
+                        </label>
+                    </div>
+                    <form id="pricingForm">
+                        <div class="input-group">
+                            <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
+                            <input type="number" id="salaryGoal" placeholder="Ex: 5000" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="customHourlyRate">Valor Hora Personalizado (R$)</label>
+                            <input type="number" id="customHourlyRate" placeholder="Ex: 100.00" step="0.01" disabled>
+                        </div>
+                        <button type="button" onclick="calculate()">Calcular</button>
+                    </form>
+                </div>
+
+                <!-- Calendário -->
+                <div class="crud-section">
+                    <h2>Calendário de Trabalho</h2>
+                    <p>
+                        Adicione dias de trabalho e horas extras para calcular o tempo total dedicado ao projeto.
+                        Isso ajudará a ajustar o valor do projeto com base no esforço adicional.
+                        <br>
+                        <strong>Exemplos:</strong> Data: 25/10/2023, Horas extras: 4.
+                    </p>
+                    <div id="calendar"></div>
+                    <div>
+                        <label for="extraDate">Data (para horas extras):</label>
+                        <input type="date" id="extraDate">
+                        <label for="extraHours">Horas Extras:</label>
+                        <input type="number" id="extraHours" placeholder="Ex: 4" step="0.5" min="0">
+                        <button onclick="addExtraHours()">Adicionar Horas Extras</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div id="results" class="hidden">
+            <h2>Resultados</h2>
+            <p>
+                Aqui estão os resultados calculados com base nas informações fornecidas.
+                Use esses valores para definir o preço do seu projeto e garantir que todos os custos sejam cobertos.
+            </p>
+            <div class="result-grid">
+                <div><strong>Valor Hora Base:</strong> <span id="hourlyRate"></span></div>
+                <div><strong>Valor Total do Projeto:</strong> <span id="projectTotal"></span></div>
+            </div>
+        </div>
+        <!-- Botão para gerar o orçamento -->
+        <button onclick="generateClientBudget(); generateFreelancerReport();">Gerar Orçamento e Relatório</button>   
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

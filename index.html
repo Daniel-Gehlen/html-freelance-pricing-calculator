@@ -4,91 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Precificação Freelancer</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Seu CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Calculadora de Precificação Freelancer</h1>
-        <div class="row">
-            <div class="col">
-                <!-- Custos Fixos -->
-                <div class="crud-section">
-                    <h2>Custos Fixos</h2>
-                    <div id="fixedCostsList"></div>
-                    <div>
-                        <input type="text" id="newFixedCostDescription" placeholder="Descrição">
-                        <input type="number" id="newFixedCost" placeholder="Valor">
-                        <button onclick="addItem('fixedCostsList', 'newFixedCostDescription', 'newFixedCost', 'cost')">Adicionar</button>
-                    </div>
-                </div>
 
-                <!-- Custos Variáveis -->
-                <div class="crud-section">
-                    <h2>Custos Variáveis</h2>
-                    <div id="variableCostsList"></div>
-                    <div>
-                        <input type="text" id="newVariableCostDescription" placeholder="Descrição">
-                        <input type="number" id="newVariableCost" placeholder="Valor">
-                        <button onclick="addItem('variableCostsList', 'newVariableCostDescription', 'newVariableCost', 'cost')">Adicionar</button>
-                    </div>
-                </div>
-
-                <!-- Horas Úteis -->
-                <div class="crud-section">
-                    <h2>Horas Úteis</h2>
-                    <div id="workingHoursList"></div>
-                    <div>
-                        <input type="text" id="newWorkingHourDescription" placeholder="Descrição">
-                        <input type="number" id="newWorkingHour" placeholder="Horas por mês">
-                        <button onclick="addItem('workingHoursList', 'newWorkingHourDescription', 'newWorkingHour', 'hours')">Adicionar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <!-- Precificação -->
-                <div class="crud-section">
-                    <h2>Precificação</h2>
-                    <form id="pricingForm">
-                        <div class="input-group">
-                            <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
-                            <input type="number" id="salaryGoal" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="customHourlyRate">Valor Hora Personalizado (R$)</label>
-                            <input type="number" id="customHourlyRate" step="0.01">
-                        </div>
-                        <button type="button" onclick="calculate()">Calcular</button>
-                    </form>
-                </div>
-
-                <!-- Calendário -->
-                <div class="crud-section">
-                    <h2>Calendário de Trabalho</h2>
-                    <div id="calendar"></div>
-                    <div>
-                        <label for="extraDate">Data (para horas extras):</label>
-                        <input type="date" id="extraDate">
-                        <label for="extraHours">Horas Extras:</label>
-                        <input type="number" id="extraHours" step="0.5" min="0">
-                        <button onclick="addExtraHours()">Adicionar Horas Extras</button>
-                    </div>
-                </div>
+    <!-- Navbar Elegante com Bootstrap -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Calculadora</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="freelance-me.html">Free Lance ME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="freelance-mei.html">Free Lance MEI</a>
+                    </li>
+                </ul>
             </div>
         </div>
+    </nav>
 
-        <!-- Resultados -->
-        <div id="results" class="hidden">
-            <h2>Resultados</h2>
-            <div class="result-grid">
-                <div><strong>Valor Hora Base:</strong> <span id="hourlyRate"></span></div>
-                <div><strong>Valor Total do Projeto:</strong> <span id="projectTotal"></span></div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Seu JS personalizado -->
     <script src="script.js"></script>
 </body>
 </html>

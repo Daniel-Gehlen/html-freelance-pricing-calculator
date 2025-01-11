@@ -287,6 +287,26 @@ RESERVAS E BENEFÍCIOS:
     URL.revokeObjectURL(url);
 }
 
+// Função para abrir um popup com o conteúdo
+function openPopup(content, title) {
+    const popup = window.open("", title, "width=600,height=400");
+    popup.document.write(`<pre>${content}</pre>`);
+    popup.document.close();
+}
+
+// Função para coletar os dados do freelancer
+async function collectFreelancerData() {
+    if (!freelancerData) {
+        freelancerData = {
+            name: prompt("Por favor, insira seu nome completo:"),
+            email: prompt("Por favor, insira seu e-mail:"),
+            whatsApp: prompt("Por favor, insira seu número de WhatsApp:"),
+            projectName: prompt("Por favor, insira o nome do projeto:")
+        };
+    }
+    return freelancerData;
+}
+
 // Inicialização ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('results').classList.add('hidden');

@@ -122,18 +122,34 @@
                     </form>
                 </div>
 
-                <!-- Calendário -->
+                <!-- Calendário de Trabalho -->
                 <div class="crud-section">
                     <h2>Calendário de Trabalho</h2>
                     <p>
-                        Adicione dias de trabalho e horas extras para calcular o tempo total dedicado ao projeto.
-                        Isso ajudará a ajustar o valor do projeto com base no esforço adicional.
-                        <br>
-                        <strong>Exemplos:</strong> Data: 25/10/2023, Horas extras: 4.
+                        Marque os dias de trabalho e horas extras diretamente no calendário.
                     </p>
+                    <div class="calendar-controls">
+                        <button onclick="markAllDays()">Marcar Todos</button>
+                        <button onclick="unmarkAllDays()">Desmarcar Todos</button>
+                        <div class="month-navigation">
+                            <button onclick="prevMonth()">◀</button>
+                            <span id="currentMonthYear"></span>
+                            <button onclick="nextMonth()">▶</button>
+                        </div>
+                        <select id="yearSelect" onchange="changeYear()"></select>
+                    </div>
                     <div id="calendar"></div>
+                </div>
+
+                <!-- Calendário de Horas Extras -->
+                <div class="crud-section">
+                    <h2>Horas Extras</h2>
+                    <p>
+                        Adicione horas extras para dias específicos.
+                    </p>
+                    <div id="extraHoursList"></div>
                     <div>
-                        <label for="extraDate">Data (para horas extras):</label>
+                        <label for="extraDate">Data:</label>
                         <input type="date" id="extraDate">
                         <label for="extraHours">Horas Extras:</label>
                         <input type="number" id="extraHours" placeholder="Ex: 4" step="0.5" min="0">
@@ -156,9 +172,120 @@
             </div>
         </div>
         <!-- Botão para gerar o orçamento -->
-        <button onclick="generateClientBudget(); generateFreelancerReport();">Gerar Orçamento e Relatório</button>   
+        <button onclick="generateClientBudget(); generateFreelancerReport();">Gerar Orçamento e Relatório</button>
     </div>
 
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <!-- Seu JS personalizado -->
     <script src="script-mei.js"></script>
+    <script>
+        let currentMonth = moment().month();
+        let currentYear = moment().year();
+
+        // Função para renderizar o calendário
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            const daysInMonth = moment(`${currentYear}-${currentMonth + 1}`, "YYYY-MM").daysInMonth();
+            const today = moment().date();
+
+            let calendarHTML = '<div class="calendar-grid">';
+            for (let day = 1; day <= daysInMonth; day++) {
+                calendarHTML += `
+                    <div class="day ${day === today && currentMonth === moment().month() ? 'today' : ''}" onclick="toggleDay(this)">
+                        ${day}
+                    </div>
+                `;
+            }
+            calendarHTML += '</div>';
+            calendar.innerHTML = calendarHTML;
+
+            // Atualizar o ano no seletor
+            const yearSelect = document.getElementById('yearSelect');
+            yearSelect.innerHTML = '';
+            for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+                yearSelect.innerHTML += `<option value="${year}" ${year === currentYear ? 'selected' : ''}>${year}</option>`;
+            }
+
+            // Atualizar o nome do mês e ano
+            const currentMonthYear = document.getElementById('currentMonthYear');
+            currentMonthYear.textContent = moment().month(currentMonth).format('MMMM YYYY');
+        }
+
+        // Função para marcar/desmarcar um dia
+        function toggleDay(dayElement) {
+            dayElement.classList.toggle('work-day');
+        }
+
+        // Função para marcar todos os dias
+        function markAllDays() {
+            const days = document.querySelectorAll('.day');
+            days.forEach(day => day.classList.add('work-day'));
+        }
+
+        // Função para desmarcar todos os dias
+        function unmarkAllDays() {
+            const days = document.querySelectorAll('.day');
+            days.forEach(day => day.classList.remove('work-day'));
+        }
+
+        // Função para mudar de mês
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+
+        // Função para mudar de ano
+        function changeYear() {
+            currentYear = parseInt(document.getElementById('yearSelect').value);
+            renderCalendar();
+        }
+
+        // Função para adicionar horas extras
+        function addExtraHours() {
+            const date = document.getElementById('extraDate').value;
+            const hours = parseFloat(document.getElementById('extraHours').value);
+
+            if (!date || isNaN(hours) || hours <= 0) {
+                alert('Por favor, preencha a data e as horas extras corretamente.');
+                return;
+            }
+
+            const extraHoursList = document.getElementById('extraHoursList');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'extra-hours-entry';
+            newEntry.innerHTML = `
+                <strong>Data:</strong> ${date} | 
+                <strong>Horas Extras:</strong> ${hours.toFixed(2)} horas
+                <button onclick="removeExtraHours(this)">Remover</button>
+            `;
+            extraHoursList.appendChild(newEntry);
+        }
+
+        // Função para remover horas extras
+        function removeExtraHours(button) {
+            const entry = button.parentElement;
+            entry.remove();
+        }
+
+        // Renderizar o calendário ao carregar a página
+        document.addEventListener('DOMContentLoaded', renderCalendar);
+    </script>
 </body>
 </html>

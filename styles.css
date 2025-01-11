@@ -1,14 +1,91 @@
+/* Estilos Globais */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 50px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #0a0808;
+    margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Navbar Fixo no Topo */
+.navbar {
+    position: fixed; /* Fixa o navbar no topo */
+    top: 0; /* Coloca o navbar no topo da página */
+    width: 100%; /* Ocupa toda a largura */
+    background: rgba(0, 0, 0, 0.9); /* Fundo semi-transparente mais escuro */
+    z-index: 1000; /* Garante que o navbar fique acima de outros elementos */
+    padding: 10px 20px; /* Espaçamento interno */
+    display: flex;
+    justify-content: center; /* Centraliza os itens horizontalmente */
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para efeito 3D */
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0 15px; /* Espaçamento entre os links */
+    padding: 10px 15px; /* Espaçamento interno para os links */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: all 0.3s ease; /* Transição suave para hover */
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #28a745 !important;
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente ao passar o mouse */
+    transform: translateY(-2px); /* Efeito de elevação 3D */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para efeito 3D */
+    text-shadow: 0 0 5px rgba(40, 167, 69, 0.8); /* Brilho nas letras */
+}
+
+/* Efeito de brilho nas letras ao passar o mouse */
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #28a745;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%; /* Linha brilhante abaixo do link */
+}
+
+/* Centralizar os itens do navbar */
+.navbar-nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
+/* Ajustes para o botão de toggle em telas pequenas */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-color: #fff; /* Cor do ícone do botão de toggle */
+}
+
+/* Ajuste para o conteúdo principal */
 .container {
     background-color: #fff;
     padding: 20px;
@@ -16,26 +93,55 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 600px;
-    max-height: 100vh; /* Adicionado para limitar a altura do container */
-    overflow-y: scroll; /* Adicionado para permitir rolagem vertical */
-    scrollbar-width: none; /* Para navegadores baseados em Firefox */
-    -ms-overflow-style: none; /* Para navegadores baseados em Internet Explorer e Edge */
+    margin-top: 80px; /* Espaço para o navbar fixo */
+    margin-bottom: 20px; /* Espaço no final */
 }
 
-.container::-webkit-scrollbar {
-    display: none; /* Para navegadores baseados em WebKit (Chrome, Safari, etc.) */
+/* Hero Section */
+.hero-section {
+    margin-top: 80px; /* Espaço para o navbar fixo */
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
 }
 
-h1, h2 {
-    color: #333;
-    position: sticky; /* Adicionado para fixar os títulos */
-    top: 0; /* Adicionado para fixar no topo */
-    background-color: #fff; /* Adicionado para manter o fundo branco */
-    padding: 10px 0; /* Adicionado para espaçamento */
-    margin: 0; /* Adicionado para remover margens padrão */
-    z-index: 1; /* Adicionado para garantir que fique acima dos outros elementos */
+.hero-section h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #141313; /* Texto branco */
 }
 
+.hero-section p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: #131010; /* Texto branco */
+}
+
+.cta-button {
+    background: #28a745;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: block; /* Faz o botão ocupar a largura total */
+    width: 100%; /* Ocupa 100% da largura do container */
+    margin-bottom: 10px; /* Espaçamento entre os botões */
+    text-align: center; /* Centraliza o texto dentro do botão */
+    text-decoration: none;
+}
+
+.cta-button:hover {
+    background: #218838;
+}
+
+/* Outros estilos (mantidos para referência) */
 label {
     display: block;
     margin: 10px 0 5px;
@@ -87,15 +193,48 @@ button:hover {
     margin-bottom: 10px;
 }
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Estilos para o Calendário */
+.calendar-controls {
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-button + .calendar-grid {
-    margin-top: 10px; /* Espaço entre o botão e os dias do calendário */
+.calendar-controls button, .calendar-controls select {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.calendar-controls button:hover, .calendar-controls select:hover {
+    background-color: #218838;
+}
+
+.month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.month-navigation button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #28a745;
+}
+
+.month-navigation button:hover {
+    color: #f1f1f1;
+}
+
+#currentMonthYear {
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .calendar-grid {
@@ -116,13 +255,34 @@ button + .calendar-grid {
     background-color: #f0f0f0;
 }
 
-.work-day {
+.day.today {
     background-color: #4CAF50;
     color: white;
 }
 
-.empty-day {
+.day.work-day {
+    background-color: #28a745;
+    color: white;
+}
+
+.extra-hours-entry {
+    margin-bottom: 10px;
+    padding: 10px;
     background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.extra-hours-entry button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.extra-hours-entry button:hover {
+    background-color: #c82333;
 }
 
 .highlight-button {
@@ -137,5 +297,5 @@ button + .calendar-grid {
 }
 
 .highlight-button:hover {
-    background-color: #218838;
+    background-color: #ebf1ec;
 }

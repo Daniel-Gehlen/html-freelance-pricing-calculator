@@ -1,20 +1,8 @@
-// Constantes de Taxas
-const TAX_RATES = {
-    simplesNacional: {
-        ranges: [
-            { maxRevenue: 180000, rate: 0.0600 },
-            { maxRevenue: 360000, rate: 0.1120 },
-            { maxRevenue: 720000, rate: 0.1350 },
-            { maxRevenue: 1800000, rate: 0.1600 },
-            { maxRevenue: 3600000, rate: 0.2100 },
-            { maxRevenue: 4800000, rate: 0.2330 },
-            { maxRevenue: Infinity, rate: 0.2450 }
-        ]
-    },
-    inss: 0.0920,
-    iR: 0.0275,
-    administration: 0.0300,
-    contingency: 0.0150
+// Constantes de Taxas para MEI
+const TAX_RATES_MEI = {
+    inss: 0.05, // 5% do salário mínimo (INSS)
+    iss: 0.05,  // 5% (ISS para serviços)
+    total: 0.10 // Total de impostos (10%)
 };
 
 // Arrays globais
@@ -163,45 +151,17 @@ function calculate() {
     document.getElementById("results").classList.remove("hidden");
 }
 
-// Função para calcular as taxas
-function calculateTaxes(monthlyRevenue) {
-    const simplesTaxRate = TAX_RATES.simplesNacional.ranges.find(r => monthlyRevenue * 12 <= r.maxRevenue)?.rate || 0;
-    const totalTaxRate = simplesTaxRate + TAX_RATES.inss + TAX_RATES.iR + TAX_RATES.administration + TAX_RATES.contingency;
+// Função para calcular as taxas do MEI
+function calculateTaxesMEI(monthlyRevenue) {
+    const inss = monthlyRevenue * TAX_RATES_MEI.inss;
+    const iss = monthlyRevenue * TAX_RATES_MEI.iss;
+    const totalTaxes = monthlyRevenue * TAX_RATES_MEI.total;
 
     return {
-        simples: monthlyRevenue * simplesTaxRate,
-        inss: monthlyRevenue * TAX_RATES.inss,
-        ir: monthlyRevenue * TAX_RATES.iR,
-        admin: monthlyRevenue * TAX_RATES.administration,
-        contingency: monthlyRevenue * TAX_RATES.contingency,
-        total: monthlyRevenue * totalTaxRate
+        inss: inss,
+        iss: iss,
+        total: totalTaxes
     };
-}
-
-// Função para coletar os dados do freelancer (evita solicitações repetidas)
-async function collectFreelancerData() {
-    if (!freelancerData) {
-        freelancerData = {
-            name: prompt("Digite seu nome completo:", "Seu Nome"),
-            email: prompt("Digite seu e-mail:", "seuemail@exemplo.com"),
-            whatsApp: prompt("Digite seu WhatsApp:", "(11) 98765-4321"),
-            projectName: prompt("Digite o nome do projeto:", "Desenvolvimento de Software")
-        };
-    }
-    return freelancerData;
-}
-
-// Função para abrir pop-ups ou exibir conteúdo na página
-function openPopup(content, title) {
-    const popup = window.open("", title, "width=600,height=600");
-    if (popup) {
-        popup.document.write(`<pre>${content}</pre>`);
-        popup.document.close();
-    } else {
-        alert("Pop-up bloqueado! O conteúdo será exibido abaixo.");
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = `<pre>${content}</pre>`;
-    }
 }
 
 // Função para gerar o orçamento para o cliente
@@ -218,12 +178,12 @@ async function generateClientBudget() {
     const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
 
     // Cálculo das taxas
-    const taxesBreakdown = calculateTaxes(projectTotal);
+    const taxesBreakdown = calculateTaxesMEI(projectTotal);
 
     // Conteúdo do orçamento para o cliente
     const budgetContentForClient = `
 ==============================
-ORÇAMENTO PARA CLIENTE
+ORÇAMENTO PARA CLIENTE (MEI)
 ==============================
 Data: ${currentDate}
 Freelancer: ${data.name}
@@ -238,12 +198,9 @@ Custos Fixos: R$ ${totalFixedCosts.toFixed(2)}
 Custos Variáveis: R$ ${totalVariableCosts.toFixed(2)}
 Horas Mensais Disponíveis: ${totalWorkingHours.toFixed(2)} horas
 ==============================
-IMPOSTOS DETALHADOS:
-- Simples Nacional: R$ ${taxesBreakdown.simples.toFixed(2)} (${((taxesBreakdown.simples / projectTotal) * 100).toFixed(2)}%)
+IMPOSTOS DETALHADOS (MEI):
 - INSS: R$ ${taxesBreakdown.inss.toFixed(2)} (${((taxesBreakdown.inss / projectTotal) * 100).toFixed(2)}%)
-- IR: R$ ${taxesBreakdown.ir.toFixed(2)} (${((taxesBreakdown.ir / projectTotal) * 100).toFixed(2)}%)
-- Administração: R$ ${taxesBreakdown.admin.toFixed(2)} (${((taxesBreakdown.admin / projectTotal) * 100).toFixed(2)}%)
-- Contingência: R$ ${taxesBreakdown.contingency.toFixed(2)} (${((taxesBreakdown.contingency / projectTotal) * 100).toFixed(2)}%)
+- ISS: R$ ${taxesBreakdown.iss.toFixed(2)} (${((taxesBreakdown.iss / projectTotal) * 100).toFixed(2)}%)
 - Total de Impostos: R$ ${taxesBreakdown.total.toFixed(2)} (${((taxesBreakdown.total / projectTotal) * 100).toFixed(2)}%)
 ==============================
 `;
@@ -256,7 +213,7 @@ IMPOSTOS DETALHADOS:
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Orcamento_Cliente_${currentDate.replace(/\//g, "-")}.txt`;
+    a.download = `Orcamento_Cliente_MEI_${currentDate.replace(/\//g, "-")}.txt`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -275,7 +232,7 @@ async function generateFreelancerReport() {
     const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
 
     // Cálculo das taxas
-    const taxesBreakdown = calculateTaxes(projectTotal);
+    const taxesBreakdown = calculateTaxesMEI(projectTotal);
 
     // Reservas e benefícios
     const salaryGoal = parseFloat(document.getElementById("salaryGoal").value) || 0;
@@ -288,7 +245,7 @@ async function generateFreelancerReport() {
     // Conteúdo do relatório para o freelancer
     const reportContentForFreelancer = `
 ==============================
-RELATÓRIO COMPLETO PARA O FREELANCER
+RELATÓRIO COMPLETO PARA O FREELANCER (MEI)
 ==============================
 Data: ${currentDate}
 Freelancer: ${data.name}
@@ -303,12 +260,9 @@ Custos Fixos: R$ ${totalFixedCosts.toFixed(2)}
 Custos Variáveis: R$ ${totalVariableCosts.toFixed(2)}
 Horas Mensais Disponíveis: ${totalWorkingHours.toFixed(2)} horas
 ==============================
-IMPOSTOS DETALHADOS:
-- Simples Nacional: R$ ${taxesBreakdown.simples.toFixed(2)} (${((taxesBreakdown.simples / projectTotal) * 100).toFixed(2)}%)
+IMPOSTOS DETALHADOS (MEI):
 - INSS: R$ ${taxesBreakdown.inss.toFixed(2)} (${((taxesBreakdown.inss / projectTotal) * 100).toFixed(2)}%)
-- IR: R$ ${taxesBreakdown.ir.toFixed(2)} (${((taxesBreakdown.ir / projectTotal) * 100).toFixed(2)}%)
-- Administração: R$ ${taxesBreakdown.admin.toFixed(2)} (${((taxesBreakdown.admin / projectTotal) * 100).toFixed(2)}%)
-- Contingência: R$ ${taxesBreakdown.contingency.toFixed(2)} (${((taxesBreakdown.contingency / projectTotal) * 100).toFixed(2)}%)
+- ISS: R$ ${taxesBreakdown.iss.toFixed(2)} (${((taxesBreakdown.iss / projectTotal) * 100).toFixed(2)}%)
 - Total de Impostos: R$ ${taxesBreakdown.total.toFixed(2)} (${((taxesBreakdown.total / projectTotal) * 100).toFixed(2)}%)
 ==============================
 RESERVAS E BENEFÍCIOS:
@@ -328,7 +282,7 @@ RESERVAS E BENEFÍCIOS:
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Relatorio_Freelancer_${currentDate.replace(/\//g, "-")}.txt`;
+    a.download = `Relatorio_Freelancer_MEI_${currentDate.replace(/\//g, "-")}.txt`;
     a.click();
     URL.revokeObjectURL(url);
 }

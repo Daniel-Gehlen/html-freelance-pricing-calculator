@@ -1,18 +1,16 @@
-// Constantes de Taxas para MEI
+// Constantes atualizadas para MEI (valores de 2023)
 const TAX_RATES_MEI = {
-    inss: 0.05, // 5% do salário mínimo (INSS)
-    iss: 0.05,  // 5% (ISS para serviços)
-    total: 0.10 // Total de impostos (10%)
+    inss: 0.05,  // 5% sobre o salário mínimo (R$ 66,00 em 2023)
+    iss: 0.05,   // 5% sobre o faturamento (para serviços)
+    das: 66.00   // Valor fixo do DAS para MEI (em 2023)
 };
 
-// Arrays globais
+// Arrays globais para armazenamento de dados
 let fixedCosts = [];
 let variableCosts = [];
 let workingHours = [];
 let workDays = [];
 let extraHours = [];
-
-// Variável global para armazenar os dados do freelancer
 let freelancerData = null;
 
 // Função para adicionar item a uma lista
@@ -40,10 +38,9 @@ function addItem(listId, descriptionId, valueId, type) {
         workingHours.push(item);
     }
 
-    // Atualiza a lista no HTML
-    updateList(listId, listId === 'fixedCostsList' ? fixedCosts : listId === 'variableCostsList' ? variableCosts : workingHours, type);
+    updateList(listId, listId === 'fixedCostsList' ? fixedCosts :
+        listId === 'variableCostsList' ? variableCosts : workingHours, type);
 
-    // Limpa os campos de entrada
     document.getElementById(descriptionId).value = '';
     document.getElementById(valueId).value = '';
 }
@@ -55,7 +52,7 @@ function updateList(listId, items, type) {
         const value = type === 'hours' ? item.availableHoursPerMonth : item.cost;
         const valueLabel = type === 'hours' ? 'Horas' : 'R$';
         return `
-            <div>
+            <div class="list-item">
                 ${item.description} - ${valueLabel} ${value.toFixed(2)}
                 <button onclick="editItem('${listId}', ${index}, '${type}')">Editar</button>
                 <button onclick="deleteItem('${listId}', ${index}, '${type}')">Excluir</button>
@@ -112,32 +109,35 @@ function toggleCalculationType(type) {
     if (type === 'salary') {
         salaryGoalInput.disabled = false;
         customHourlyRateInput.disabled = true;
-        customHourlyRateInput.value = ''; // Limpa o valor do campo desabilitado
+        customHourlyRateInput.value = '';
     } else if (type === 'hourlyRate') {
         salaryGoalInput.disabled = true;
         customHourlyRateInput.disabled = false;
-        salaryGoalInput.value = ''; // Limpa o valor do campo desabilitado
+        salaryGoalInput.value = '';
     }
 }
 
 // Função para calcular os valores
 function calculate() {
-    const salaryGoal = parseFloat(document.getElementById('salaryGoal').value); // Salário líquido desejado
-    const customHourlyRate = parseFloat(document.getElementById('customHourlyRate').value); // Valor da hora personalizado
+    const salaryGoal = parseFloat(document.getElementById('salaryGoal').value);
+    const customHourlyRate = parseFloat(document.getElementById('customHourlyRate').value);
 
     let totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
     let totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
     let totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
 
+    if (totalWorkingHours <= 0) {
+        alert('O total de horas trabalhadas deve ser maior que zero!');
+        return;
+    }
+
     let hourlyRate = 0;
     let projectTotal = 0;
 
     if (!isNaN(customHourlyRate) && customHourlyRate > 0) {
-        // Baseado no valor da hora fornecido
         hourlyRate = customHourlyRate;
         projectTotal = hourlyRate * totalWorkingHours;
     } else if (!isNaN(salaryGoal) && salaryGoal > 0) {
-        // Baseado no salário líquido desejado
         hourlyRate = (salaryGoal + totalFixedCosts + totalVariableCosts) / totalWorkingHours;
         projectTotal = hourlyRate * totalWorkingHours;
     } else {
@@ -145,7 +145,6 @@ function calculate() {
         return;
     }
 
-    // Exibir os resultados
     document.getElementById("hourlyRate").innerText = hourlyRate.toFixed(2);
     document.getElementById("projectTotal").innerText = projectTotal.toFixed(2);
     document.getElementById("results").classList.remove("hidden");
@@ -153,161 +152,279 @@ function calculate() {
 
 // Função para calcular as taxas do MEI
 function calculateTaxesMEI(monthlyRevenue) {
-    const inss = monthlyRevenue * TAX_RATES_MEI.inss;
-    const iss = monthlyRevenue * TAX_RATES_MEI.iss;
-    const totalTaxes = monthlyRevenue * TAX_RATES_MEI.total;
+    if (!monthlyRevenue || monthlyRevenue <= 0) return {
+        das: 0,
+        inss: 0,
+        iss: 0,
+        inssPercentage: '0.00',
+        issPercentage: '0.00',
+        totalPercentage: '0.00'
+    };
+
+    const iss = Math.min(monthlyRevenue * TAX_RATES_MEI.iss, 81.90);
+    const inss = TAX_RATES_MEI.das - iss > 0 ? TAX_RATES_MEI.das - iss : 0;
+    const totalTaxes = TAX_RATES_MEI.das;
 
     return {
+        das: totalTaxes,
         inss: inss,
         iss: iss,
-        total: totalTaxes
+        inssPercentage: (inss / monthlyRevenue * 100).toFixed(2),
+        issPercentage: (iss / monthlyRevenue * 100).toFixed(2),
+        totalPercentage: (totalTaxes / monthlyRevenue * 100).toFixed(2)
     };
 }
 
-// Função para gerar o orçamento para o cliente
-async function generateClientBudget() {
-    console.log("Gerando orçamento para o cliente...");
-    const data = await collectFreelancerData();
-    const projectTotal = parseFloat(document.getElementById("projectTotal").innerText.replace("R$", "").trim()) || 0;
-    const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText.replace("R$", "").trim()) || 0;
-    const currentDate = new Date().toLocaleDateString("pt-BR");
+// Função para calcular reservas financeiras
+function calculateReserves(salaryGoal, projectTotal) {
+    if (!salaryGoal || salaryGoal <= 0) {
+        return {
+            contingencyReserve: 0,
+            monthlyContingencyReserve: 0,
+            monthsToSaveContingency: 0,
+            monthly13thReserve: 0,
+            vacationReserve: 0
+        };
+    }
 
-    // Cálculos adicionais
-    const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+    const contingencyReserve = salaryGoal * 6;
+    const monthlyContingencyReserve = projectTotal * 0.20;
+    const monthsToSaveContingency = monthlyContingencyReserve > 0 ?
+        (contingencyReserve / monthlyContingencyReserve) : 0;
 
-    // Cálculo das taxas
-    const taxesBreakdown = calculateTaxesMEI(projectTotal);
-
-    // Conteúdo do orçamento para o cliente
-    const budgetContentForClient = `
-==============================
-ORÇAMENTO PARA CLIENTE (MEI)
-==============================
-Data: ${currentDate}
-Freelancer: ${data.name}
-E-mail: ${data.email}
-WhatsApp: ${data.whatsApp}
-==============================
-Projeto: ${data.projectName}
-Valor Hora: R$ ${hourlyRate.toFixed(2)}
-Valor Total do Projeto: R$ ${projectTotal.toFixed(2)}
-==============================
-Custos Fixos: R$ ${totalFixedCosts.toFixed(2)}
-Custos Variáveis: R$ ${totalVariableCosts.toFixed(2)}
-Horas Mensais Disponíveis: ${totalWorkingHours.toFixed(2)} horas
-==============================
-IMPOSTOS DETALHADOS (MEI):
-- INSS: R$ ${taxesBreakdown.inss.toFixed(2)} (${((taxesBreakdown.inss / projectTotal) * 100).toFixed(2)}%)
-- ISS: R$ ${taxesBreakdown.iss.toFixed(2)} (${((taxesBreakdown.iss / projectTotal) * 100).toFixed(2)}%)
-- Total de Impostos: R$ ${taxesBreakdown.total.toFixed(2)} (${((taxesBreakdown.total / projectTotal) * 100).toFixed(2)}%)
-==============================
-`;
-
-    // Exibir o orçamento
-    openPopup(budgetContentForClient, "Orçamento para o Cliente");
-
-    // Opção para salvar o orçamento como arquivo de texto
-    const blob = new Blob([budgetContentForClient], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Orcamento_Cliente_MEI_${currentDate.replace(/\//g, "-")}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+    return {
+        contingencyReserve: contingencyReserve,
+        monthlyContingencyReserve: monthlyContingencyReserve,
+        monthsToSaveContingency: monthsToSaveContingency.toFixed(1),
+        monthly13thReserve: salaryGoal / 12,
+        vacationReserve: salaryGoal / 12
+    };
 }
 
-// Função para gerar o relatório completo para o freelancer
-async function generateFreelancerReport() {
-    console.log("Gerando relatório para o freelancer...");
-    const data = await collectFreelancerData();
-    const projectTotal = parseFloat(document.getElementById("projectTotal").innerText.replace("R$", "").trim()) || 0;
-    const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText.replace("R$", "").trim()) || 0;
-    const currentDate = new Date().toLocaleDateString("pt-BR");
-
-    // Cálculos adicionais
-    const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
-
-    // Cálculo das taxas
-    const taxesBreakdown = calculateTaxesMEI(projectTotal);
-
-    // Reservas e benefícios
-    const salaryGoal = parseFloat(document.getElementById("salaryGoal").value) || 0;
-    const contingencyReserve = salaryGoal * 6; // Reserva para 6 meses
-    const monthlyContingencyReserve = salaryGoal * 0.20; // 20% da receita mensal
-    const monthsToSaveContingency = contingencyReserve / monthlyContingencyReserve;
-    const monthly13thReserve = salaryGoal / 12; // Reserva para o 13º salário
-    const vacationReserve = salaryGoal / 12; // Reserva para férias (1/12 do salário)
-
-    // Conteúdo do relatório para o freelancer
-    const reportContentForFreelancer = `
-==============================
-RELATÓRIO COMPLETO PARA O FREELANCER (MEI)
-==============================
-Data: ${currentDate}
-Freelancer: ${data.name}
-E-mail: ${data.email}
-WhatsApp: ${data.whatsApp}
-==============================
-Projeto: ${data.projectName}
-Valor Hora: R$ ${hourlyRate.toFixed(2)}
-Valor Total do Projeto: R$ ${projectTotal.toFixed(2)}
-==============================
-Custos Fixos: R$ ${totalFixedCosts.toFixed(2)}
-Custos Variáveis: R$ ${totalVariableCosts.toFixed(2)}
-Horas Mensais Disponíveis: ${totalWorkingHours.toFixed(2)} horas
-==============================
-IMPOSTOS DETALHADOS (MEI):
-- INSS: R$ ${taxesBreakdown.inss.toFixed(2)} (${((taxesBreakdown.inss / projectTotal) * 100).toFixed(2)}%)
-- ISS: R$ ${taxesBreakdown.iss.toFixed(2)} (${((taxesBreakdown.iss / projectTotal) * 100).toFixed(2)}%)
-- Total de Impostos: R$ ${taxesBreakdown.total.toFixed(2)} (${((taxesBreakdown.total / projectTotal) * 100).toFixed(2)}%)
-==============================
-RESERVAS E BENEFÍCIOS:
-- Reserva para Contingência (6 meses): R$ ${contingencyReserve.toFixed(2)}
-- Reserva Mensal para Contingência: R$ ${monthlyContingencyReserve.toFixed(2)} (20% da receita mensal)
-- Tempo para alcançar a reserva: ${monthsToSaveContingency.toFixed(2)} meses
-- Reserva Mensal para o 13º Salário: R$ ${monthly13thReserve.toFixed(2)}
-- Reserva Mensal para Férias: R$ ${vacationReserve.toFixed(2)}
-==============================
-`;
-
-    // Exibir o relatório
-    openPopup(reportContentForFreelancer, "Relatório para o Freelancer");
-
-    // Opção para salvar o relatório como arquivo de texto
-    const blob = new Blob([reportContentForFreelancer], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Relatorio_Freelancer_MEI_${currentDate.replace(/\//g, "-")}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+// Função para formatar moeda
+function formatCurrency(value) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
 }
 
-// Função para abrir um popup com o conteúdo
-function openPopup(content, title) {
-    const popup = window.open("", title, "width=600,height=400");
-    popup.document.write(`<pre>${content}</pre>`);
-    popup.document.close();
-}
-
-// Função para coletar os dados do freelancer
+// Função para coletar dados do freelancer
 async function collectFreelancerData() {
     if (!freelancerData) {
         freelancerData = {
-            name: prompt("Por favor, insira seu nome completo:"),
-            email: prompt("Por favor, insira seu e-mail:"),
-            whatsApp: prompt("Por favor, insira seu número de WhatsApp:"),
-            projectName: prompt("Por favor, insira o nome do projeto:")
+            name: prompt("Por favor, insira seu nome completo:") || "Freelancer MEI",
+            email: prompt("Por favor, insira seu e-mail:") || "contato@freelancer.com",
+            whatsApp: prompt("Por favor, insira seu número de WhatsApp:") || "(00) 00000-0000",
+            projectName: prompt("Por favor, insira o nome do projeto:") || "Projeto MEI"
         };
+
+        try {
+            await validateFreelancerData(freelancerData);
+        } catch (error) {
+            alert(error.message);
+            return collectFreelancerData();
+        }
     }
     return freelancerData;
+}
+
+// Função para validar dados do freelancer
+async function validateFreelancerData(data) {
+    if (!data.name || !data.email || !data.whatsApp || !data.projectName) {
+        throw new Error('Todos os dados do freelancer são obrigatórios');
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+        throw new Error('Por favor, insira um e-mail válido');
+    }
+
+    const whatsAppRegex = /^(\+?55)?\s?(\(?\d{2}\)?)?\s?(\d{4,5}\-?\d{4})$/;
+    if (!whatsAppRegex.test(data.whatsApp)) {
+        throw new Error('Por favor, insira um número de WhatsApp válido');
+    }
+
+    return true;
+}
+
+// Função para gerar orçamento para o cliente
+async function generateClientBudget() {
+    try {
+        const data = await collectFreelancerData();
+        const projectTotal = parseFloat(document.getElementById("projectTotal").innerText) || 0;
+        const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText) || 0;
+        const currentDate = new Date().toLocaleDateString("pt-BR");
+
+        const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
+        const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
+        const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+        const taxes = calculateTaxesMEI(projectTotal);
+
+        const fixedCostsDetails = fixedCosts.map(item =>
+            `- ${item.description}: ${formatCurrency(item.cost)}`).join('\n') || 'Nenhum custo fixo informado';
+
+        const variableCostsDetails = variableCosts.map(item =>
+            `- ${item.description}: ${formatCurrency(item.cost)}`).join('\n') || 'Nenhum custo variável informado';
+
+        const workingHoursDetails = workingHours.map(item =>
+            `- ${item.description}: ${item.availableHoursPerMonth} horas`).join('\n') || 'Nenhuma hora informada';
+
+        const budgetContent = `
+==================================================
+ORÇAMENTO DETALHADO - ${data.projectName.toUpperCase()}
+==================================================
+Data: ${currentDate}
+Profissional: ${data.name}
+Contato: ${data.email} | WhatsApp: ${data.whatsApp}
+==================================================
+
+VALORES DO PROJETO:
+- Valor Hora: ${formatCurrency(hourlyRate)}
+- Horas Estimadas: ${totalWorkingHours} horas
+- Valor Total do Projeto: ${formatCurrency(projectTotal)}
+
+DETALHAMENTO DE CUSTOS FIXOS (${fixedCosts.length} itens):
+${fixedCostsDetails}
+TOTAL CUSTOS FIXOS: ${formatCurrency(totalFixedCosts)}
+
+DETALHAMENTO DE CUSTOS VARIÁVEIS (${variableCosts.length} itens):
+${variableCostsDetails}
+TOTAL CUSTOS VARIÁVEIS: ${formatCurrency(totalVariableCosts)}
+
+DETALHAMENTO DE HORAS TRABALHADAS:
+${workingHoursDetails}
+TOTAL HORAS: ${totalWorkingHours} horas
+
+IMPOSTOS (MEI):
+- DAS (Documento de Arrecadação do Simples Nacional): ${formatCurrency(taxes.das)}
+  - INSS (5% do salário mínimo): ${formatCurrency(taxes.inss)} (${taxes.inssPercentage}%)
+  - ISS (5% do faturamento): ${formatCurrency(taxes.iss)} (${taxes.issPercentage}%)
+- TOTAL IMPOSTOS: ${formatCurrency(taxes.das)} (${taxes.totalPercentage}% do faturamento)
+
+==================================================
+VALOR FINAL DO PROJETO: ${formatCurrency(projectTotal)}
+==================================================
+`;
+
+        openPopup(budgetContent, "Orçamento Detalhado");
+        downloadFile(budgetContent, `Orcamento_${data.projectName}_${currentDate.replace(/\//g, '-')}.txt`);
+    } catch (error) {
+        alert(`Erro ao gerar orçamento: ${error.message}`);
+    }
+}
+
+// Função para gerar relatório completo
+async function generateFreelancerReport() {
+    try {
+        const data = await collectFreelancerData();
+        const projectTotal = parseFloat(document.getElementById("projectTotal").innerText) || 0;
+        const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText) || 0;
+        const salaryGoal = parseFloat(document.getElementById("salaryGoal").value) || 0;
+        const currentDate = new Date().toLocaleDateString("pt-BR");
+
+        const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
+        const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
+        const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+        const taxes = calculateTaxesMEI(projectTotal);
+        const reserves = calculateReserves(salaryGoal, projectTotal);
+
+        const reportContent = `
+==================================================
+RELATÓRIO FINANCEIRO COMPLETO - MEI
+==================================================
+Data: ${currentDate}
+Profissional: ${data.name}
+Projeto: ${data.projectName}
+==================================================
+
+RESUMO FINANCEIRO:
+- Faturamento Bruto: ${formatCurrency(projectTotal)}
+- Custos Fixos: ${formatCurrency(totalFixedCosts)}
+- Custos Variáveis: ${formatCurrency(totalVariableCosts)}
+- Impostos (DAS MEI): ${formatCurrency(taxes.das)}
+- Lucro Líquido: ${formatCurrency(projectTotal - totalFixedCosts - totalVariableCosts - taxes.das)}
+
+DETALHAMENTO TRIBUTÁRIO (MEI):
+- DAS (Documento de Arrecadação do Simples Nacional): ${formatCurrency(taxes.das)}
+  - INSS (Previdência): ${formatCurrency(taxes.inss)} (${taxes.inssPercentage}% do faturamento)
+  - ISS (Serviços): ${formatCurrency(taxes.iss)} (${taxes.issPercentage}% do faturamento)
+- Alíquota Efetiva Total: ${taxes.totalPercentage}%
+
+PLANEJAMENTO FINANCEIRO:
+- Meta de Remuneração Mensal: ${formatCurrency(salaryGoal)}
+- Reserva de Contingência (6 meses): ${formatCurrency(reserves.contingencyReserve)}
+- Reserva Mensal para Contingência: ${formatCurrency(reserves.monthlyContingencyReserve)} (20% do faturamento)
+- Tempo para constituir reserva: ${reserves.monthsToSaveContingency} meses
+- Reserva Mensal para 13º Salário: ${formatCurrency(reserves.monthly13thReserve)}
+- Reserva Mensal para Férias: ${formatCurrency(reserves.vacationReserve)}
+
+ANÁLISE DE PRODUTIVIDADE:
+- Valor Hora Calculado: ${formatCurrency(hourlyRate)}
+- Horas Trabalhadas no Mês: ${totalWorkingHours} horas
+- Receita por Hora Efetiva: ${formatCurrency(projectTotal / totalWorkingHours)}
+
+RECOMENDAÇÕES:
+1. Manter pelo menos 20% do faturamento em reserva financeira
+2. Revisar os valores dos impostos mensalmente (DAS MEI)
+3. Atualizar os custos fixos e variáveis trimestralmente
+4. Ajustar o valor hora conforme aumento de experiência e portfólio
+
+==================================================
+`;
+
+        openPopup(reportContent, "Relatório Financeiro MEI");
+        downloadFile(reportContent, `Relatorio_MEI_${currentDate.replace(/\//g, '-')}.txt`);
+    } catch (error) {
+        alert(`Erro ao gerar relatório: ${error.message}`);
+    }
+}
+
+// Função para abrir popup com conteúdo
+function openPopup(content, title) {
+    const popup = window.open("", title, "width=700,height=600,scrollbars=yes,resizable=yes");
+    popup.document.write(`
+        <html>
+        <head>
+            <title>${title}</title>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; white-space: pre-wrap; }
+                h1 { color: #2c3e50; }
+                .highlight { background-color: #f8f9fa; padding: 10px; border-radius: 5px; }
+            </style>
+        </head>
+        <body>
+            <h1>${title}</h1>
+            <div class="highlight">${content}</div>
+            <button onclick="window.print()">Imprimir</button>
+            <button onclick="window.close()">Fechar</button>
+        </body>
+        </html>
+    `);
+    popup.document.close();
+}
+
+// Função para download de arquivo
+function downloadFile(content, filename) {
+    try {
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        alert(`Erro ao baixar arquivo: ${error.message}`);
+    }
 }
 
 // Inicialização ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('results').classList.add('hidden');
+    toggleCalculationType('salary'); // Define cálculo por salário como padrão
 });

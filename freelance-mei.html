@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Precificação Freelancer MEI</title>
+    <!-- Meta tags para compartilhamento universal -->
+    <meta property="og:title" content="Calculadora de Precificação Freelancer">
+    <meta property="og:description"
+        content="Calcule o valor do seu trabalho de forma precisa e justa. Considere custos, impostos e seu lucro desejado.">
+    <meta property="og:image"
+        content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/share-image.jpg">
+    <meta property="og:url" content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/">
+    <meta property="og:type" content="website">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
     <!-- Navbar Elegante com Bootstrap -->
@@ -101,11 +113,13 @@
                     </p>
                     <div>
                         <label>
-                            <input type="radio" name="calculationType" value="salary" checked onclick="toggleCalculationType('salary')">
+                            <input type="radio" name="calculationType" value="salary" checked
+                                onclick="toggleCalculationType('salary')">
                             Com base no Salário Líquido Desejado
                         </label>
                         <label>
-                            <input type="radio" name="calculationType" value="hourlyRate" onclick="toggleCalculationType('hourlyRate')">
+                            <input type="radio" name="calculationType" value="hourlyRate"
+                                onclick="toggleCalculationType('hourlyRate')">
                             Com base no Valor Hora Personalizado
                         </label>
                     </div>
@@ -288,4 +302,5 @@
         document.addEventListener('DOMContentLoaded', renderCalendar);
     </script>
 </body>
+
 </html>

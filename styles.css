@@ -1,327 +1,340 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg-main: #0f172a;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-main: #f8fafc;
-    --text-dim: #94a3b8;
-    --success: #22c55e;
-    --danger: #ef4444;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-main: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+  --success: #22c55e;
+  --danger: #ef4444;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 /* Navbar Fixo no Topo */
 .navbar {
-    position: fixed; /* Fixa o navbar no topo */
-    top: 0; /* Coloca o navbar no topo da página */
-    width: 100%; /* Ocupa toda a largura */
-    background: rgba(0, 0, 0, 0.9); /* Fundo semi-transparente mais escuro */
-    z-index: 1000; /* Garante que o navbar fique acima de outros elementos */
-    padding: 10px 20px; /* Espaçamento interno */
-    display: flex;
-    justify-content: center; /* Centraliza os itens horizontalmente */
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para efeito 3D */
+  position: fixed; /* Fixa o navbar no topo */
+  top: 0; /* Coloca o navbar no topo da página */
+  width: 100%; /* Ocupa toda a largura */
+  background: rgba(0, 0, 0, 0.9); /* Fundo semi-transparente mais escuro */
+  z-index: 1000; /* Garante que o navbar fique acima de outros elementos */
+  padding: 10px 20px; /* Espaçamento interno */
+  display: flex;
+  justify-content: center; /* Centraliza os itens horizontalmente */
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para efeito 3D */
 }
 
-.navbar-brand, .navbar-nav .nav-link {
-    color: #fff !important;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0 15px; /* Espaçamento entre os links */
-    padding: 10px 15px; /* Espaçamento interno para os links */
-    border-radius: 5px; /* Bordas arredondadas */
-    transition: all 0.3s ease; /* Transição suave para hover */
-    position: relative;
-    display: flex;
-    align-items: center;
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #fff !important;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 15px; /* Espaçamento entre os links */
+  padding: 10px 15px; /* Espaçamento interno para os links */
+  border-radius: 5px; /* Bordas arredondadas */
+  transition: all 0.3s ease; /* Transição suave para hover */
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-nav .nav-link:hover {
-    color: #28a745 !important;
-    background-color: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente ao passar o mouse */
-    transform: translateY(-2px); /* Efeito de elevação 3D */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para efeito 3D */
-    text-shadow: 0 0 5px rgba(40, 167, 69, 0.8); /* Brilho nas letras */
+  color: #28a745 !important;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Fundo semi-transparente ao passar o mouse */
+  transform: translateY(-2px); /* Efeito de elevação 3D */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para efeito 3D */
+  text-shadow: 0 0 5px rgba(40, 167, 69, 0.8); /* Brilho nas letras */
 }
 
 /* Efeito de brilho nas letras ao passar o mouse */
 .navbar-nav .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: #28a745;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #28a745;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
 .navbar-nav .nav-link:hover::after {
-    width: 100%; /* Linha brilhante abaixo do link */
+  width: 100%; /* Linha brilhante abaixo do link */
 }
 
 /* Centralizar os itens do navbar */
 .navbar-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* Ajustes para o botão de toggle em telas pequenas */
 .navbar-toggler {
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 }
 
 .navbar-toggler-icon {
-    background-color: #fff; /* Cor do ícone do botão de toggle */
+  background-color: #fff; /* Cor do ícone do botão de toggle */
 }
 
 /* Ajuste para o conteúdo principal */
 .container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    margin-top: 80px; /* Espaço para o navbar fixo */
-    margin-bottom: 20px; /* Espaço no final */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin-top: 80px; /* Espaço para o navbar fixo */
+  margin-bottom: 20px; /* Espaço no final */
 }
 
 /* Hero Section */
 .hero-section {
-    margin-top: 80px; /* Espaço para o navbar fixo */
-    padding: 20px;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px;
+  margin-top: 80px; /* Espaço para o navbar fixo */
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
 }
 
 .hero-section h1 {
-    font-size: 4rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #141313; /* Texto branco */
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #141313; /* Texto branco */
 }
 
 .hero-section p {
-    font-size: 1.5rem;
-    margin-bottom: 40px;
-    color: #131010; /* Texto branco */
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  color: #131010; /* Texto branco */
 }
 
 .cta-button {
-    background: #28a745;
-    color: #fff;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    display: block; /* Faz o botão ocupar a largura total */
-    width: 100%; /* Ocupa 100% da largura do container */
-    margin-bottom: 10px; /* Espaçamento entre os botões */
-    text-align: center; /* Centraliza o texto dentro do botão */
-    text-decoration: none;
+  background: #28a745;
+  color: #fff;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: block; /* Faz o botão ocupar a largura total */
+  width: 100%; /* Ocupa 100% da largura do container */
+  margin-bottom: 10px; /* Espaçamento entre os botões */
+  text-align: center; /* Centraliza o texto dentro do botão */
+  text-decoration: none;
 }
 
 .cta-button:hover {
-    background: #218838;
+  background: #218838;
 }
 
 /* Outros estilos (mantidos para referência) */
 label {
-    display: block;
-    margin: 10px 0 5px;
-    color: #555;
+  display: block;
+  margin: 10px 0 5px;
+  color: #555;
 }
 
-input[type="number"], input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-    background-color: #28a745;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
 }
 
 button:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 #results {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #e9f7ef;
-    border-radius: 4px;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e9f7ef;
+  border-radius: 4px;
 }
 
 #results p {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 .crud-section {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, border-color 0.2s ease;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .crud-section:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-#fixedCostsList, #variableCostsList, #workingHoursList {
-    margin-bottom: 10px;
+#fixedCostsList,
+#variableCostsList,
+#workingHoursList {
+  margin-bottom: 10px;
 }
 
 /* Estilos para o Calendário */
 .calendar-controls {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.calendar-controls button, .calendar-controls select {
-    background-color: #28a745;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.calendar-controls button,
+.calendar-controls select {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.calendar-controls button:hover, .calendar-controls select:hover {
-    background-color: #218838;
+.calendar-controls button:hover,
+.calendar-controls select:hover {
+  background-color: #218838;
 }
 
 .month-navigation {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .month-navigation button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #28a745;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #28a745;
 }
 
 .month-navigation button:hover {
-    color: #f1f1f1;
+  color: #f1f1f1;
 }
 
 #currentMonthYear {
-    font-size: 1.2rem;
-    font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    text-align: center;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
 }
 
 .day {
-    border: 1px solid #ddd;
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  border: 1px solid #ddd;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .day:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .day.today {
-    background-color: #4CAF50;
-    color: white;
+  background-color: #4caf50;
+  color: white;
 }
 
 .day.work-day {
-    background-color: #28a745;
-    color: white;
+  background-color: #28a745;
+  color: white;
 }
 
 .extra-hours-entry {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
 }
 
 .extra-hours-entry button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
 .extra-hours-entry button:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
 .highlight-button {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
 }
 
 .highlight-button:hover {
-    background-color: #ebf1ec;
+  background-color: #ebf1ec;
 }

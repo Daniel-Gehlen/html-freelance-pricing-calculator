@@ -1,20 +1,20 @@
 // Constantes de Taxas
 const TAX_RATES = {
-    simplesNacional: {
-        ranges: [
-            { maxRevenue: 180000, rate: 0.0600 },
-            { maxRevenue: 360000, rate: 0.1120 },
-            { maxRevenue: 720000, rate: 0.1350 },
-            { maxRevenue: 1800000, rate: 0.1600 },
-            { maxRevenue: 3600000, rate: 0.2100 },
-            { maxRevenue: 4800000, rate: 0.2330 },
-            { maxRevenue: Infinity, rate: 0.2450 }
-        ]
-    },
-    inss: 0.0920,
-    iR: 0.0275,
-    administration: 0.0300,
-    contingency: 0.0150
+  simplesNacional: {
+    ranges: [
+      { maxRevenue: 180000, rate: 0.06 },
+      { maxRevenue: 360000, rate: 0.112 },
+      { maxRevenue: 720000, rate: 0.135 },
+      { maxRevenue: 1800000, rate: 0.16 },
+      { maxRevenue: 3600000, rate: 0.21 },
+      { maxRevenue: 4800000, rate: 0.233 },
+      { maxRevenue: Infinity, rate: 0.245 },
+    ],
+  },
+  inss: 0.092,
+  iR: 0.0275,
+  administration: 0.03,
+  contingency: 0.015,
 };
 
 // Arrays globais
@@ -27,290 +27,392 @@ let extraHours = [];
 /**
  * Sistema de Notificações Global (Melhor que alert)
  */
-function showNotification(message, type = 'info') {
-    console.log(`[${type.toUpperCase()}] ${message}`);
-    // Futuramente podemos integrar com um sistema de Toast
-    alert(message); 
+function showNotification(message, type = "info") {
+  console.log(`[${type.toUpperCase()}] ${message}`);
+  // Futuramente podemos integrar com um sistema de Toast
+  alert(message);
 }
 
 /**
  * Validação de entrada genérica
  */
-function validateInput(value, description, type = 'number') {
-    if (!description || description.trim() === '') {
-        showNotification('A descrição não pode estar vazia!', 'error');
-        return false;
-    }
-    if (type === 'number' && (isNaN(value) || value <= 0)) {
-        showNotification('O valor deve ser um número maior que zero!', 'error');
-        return false;
-    }
-    return true;
+function validateInput(value, description, type = "number") {
+  if (!description || description.trim() === "") {
+    showNotification("A descrição não pode estar vazia!", "error");
+    return false;
+  }
+  if (type === "number" && (isNaN(value) || value <= 0)) {
+    showNotification("O valor deve ser um número maior que zero!", "error");
+    return false;
+  }
+  return true;
 }
 
 // Tratamento de Erros Global
 window.onerror = function (message, source, lineno, colno, error) {
-    showNotification(`Erro inesperado: ${message}`, 'error');
-    return true;
+  showNotification(`Erro inesperado: ${message}`, "error");
+  return true;
 };
 
 // Variável global para armazenar os dados do freelancer (persistente)
-let freelancerData = JSON.parse(localStorage.getItem('freelancerData')) || null;
+let freelancerData = JSON.parse(localStorage.getItem("freelancerData")) || null;
 
 /**
  * Salva os estados atuais no LocalStorage
  */
 function saveData() {
-    localStorage.setItem('fixedCosts', JSON.stringify(fixedCosts));
-    localStorage.setItem('variableCosts', JSON.stringify(variableCosts));
-    localStorage.setItem('workingHours', JSON.stringify(workingHours));
-    localStorage.setItem('freelancerData', JSON.stringify(freelancerData));
+  localStorage.setItem("fixedCosts", JSON.stringify(fixedCosts));
+  localStorage.setItem("variableCosts", JSON.stringify(variableCosts));
+  localStorage.setItem("workingHours", JSON.stringify(workingHours));
+  localStorage.setItem("freelancerData", JSON.stringify(freelancerData));
 }
 
 /**
  * Carrega os estados do LocalStorage e atualiza a interface
  */
 function loadData() {
-    fixedCosts = JSON.parse(localStorage.getItem('fixedCosts')) || [];
-    variableCosts = JSON.parse(localStorage.getItem('variableCosts')) || [];
-    workingHours = JSON.parse(localStorage.getItem('workingHours')) || [];
-    
-    updateList('fixedCostsList', fixedCosts, 'cost');
-    updateList('variableCostsList', variableCosts, 'cost');
-    updateList('workingHoursList', workingHours, 'hours');
+  fixedCosts = JSON.parse(localStorage.getItem("fixedCosts")) || [];
+  variableCosts = JSON.parse(localStorage.getItem("variableCosts")) || [];
+  workingHours = JSON.parse(localStorage.getItem("workingHours")) || [];
+
+  updateList("fixedCostsList", fixedCosts, "cost");
+  updateList("variableCostsList", variableCosts, "cost");
+  updateList("workingHoursList", workingHours, "hours");
 }
 
 // Função para adicionar item a uma lista
 function addItem(listId, descriptionId, valueId, type) {
-    const description = document.getElementById(descriptionId).value.trim();
-    const value = parseFloat(document.getElementById(valueId).value);
+  const description = document.getElementById(descriptionId).value.trim();
+  const value = parseFloat(document.getElementById(valueId).value);
 
-    // Validação usando o novo helper
-    if (!validateInput(value, description, 'number')) {
-        return;
-    }
+  // Validação usando o novo helper
+  if (!validateInput(value, description, "number")) {
+    return;
+  }
 
-    const item = type === 'hours' ? { description, availableHoursPerMonth: value } : { description, cost: value };
+  const item =
+    type === "hours"
+      ? { description, availableHoursPerMonth: value }
+      : { description, cost: value };
 
-    if (listId === 'fixedCostsList') {
-        fixedCosts.push(item);
-    } else if (listId === 'variableCostsList') {
-        variableCosts.push(item);
-    } else if (listId === 'workingHoursList') {
-        workingHours.push(item);
-    }
+  if (listId === "fixedCostsList") {
+    fixedCosts.push(item);
+  } else if (listId === "variableCostsList") {
+    variableCosts.push(item);
+  } else if (listId === "workingHoursList") {
+    workingHours.push(item);
+  }
 
-    saveData();
+  saveData();
 
-    // Atualiza a lista no HTML
-    updateList(listId, listId === 'fixedCostsList' ? fixedCosts : listId === 'variableCostsList' ? variableCosts : workingHours, type);
+  // Atualiza a lista no HTML
+  updateList(
+    listId,
+    listId === "fixedCostsList"
+      ? fixedCosts
+      : listId === "variableCostsList"
+        ? variableCosts
+        : workingHours,
+    type,
+  );
 
-    // Limpa os campos de entrada
-    document.getElementById(descriptionId).value = '';
-    document.getElementById(valueId).value = '';
+  // Limpa os campos de entrada
+  document.getElementById(descriptionId).value = "";
+  document.getElementById(valueId).value = "";
 }
 
 // Função para atualizar listas no HTML
 function updateList(listId, items, type) {
-    const list = document.getElementById(listId);
-    list.innerHTML = items.map((item, index) => {
-        const value = type === 'hours' ? item.availableHoursPerMonth : item.cost;
-        const valueLabel = type === 'hours' ? 'Horas' : 'R$';
-        return `
+  const list = document.getElementById(listId);
+  list.innerHTML = items
+    .map((item, index) => {
+      const value = type === "hours" ? item.availableHoursPerMonth : item.cost;
+      const valueLabel = type === "hours" ? "Horas" : "R$";
+      return `
             <div>
                 ${item.description} - ${valueLabel} ${value.toFixed(2)}
                 <button onclick="editItem('${listId}', ${index}, '${type}')">Editar</button>
                 <button onclick="deleteItem('${listId}', ${index}, '${type}')">Excluir</button>
             </div>
         `;
-    }).join('');
+    })
+    .join("");
 }
 
 // Função para editar item em uma lista
 function editItem(listId, index, type) {
-    let list;
-    if (listId === 'fixedCostsList') {
-        list = fixedCosts;
-    } else if (listId === 'variableCostsList') {
-        list = variableCosts;
-    } else {
-        list = workingHours;
-    }
-    const item = list[index];
+  let list;
+  if (listId === "fixedCostsList") {
+    list = fixedCosts;
+  } else if (listId === "variableCostsList") {
+    list = variableCosts;
+  } else {
+    list = workingHours;
+  }
+  const item = list[index];
 
-    // Preencher o modal
-    document.getElementById('editIndex').value = index;
-    document.getElementById('editListId').value = listId;
-    document.getElementById('editType').value = type;
-    document.getElementById('editDescription').value = item.description;
-    document.getElementById('editValue').value = type === 'hours' ? item.availableHoursPerMonth : item.cost;
+  // Preencher o modal
+  document.getElementById("editIndex").value = index;
+  document.getElementById("editListId").value = listId;
+  document.getElementById("editType").value = type;
+  document.getElementById("editDescription").value = item.description;
+  document.getElementById("editValue").value =
+    type === "hours" ? item.availableHoursPerMonth : item.cost;
 
-    // Mostrar o modal (Bootstrap 5)
-    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
-    editModal.show();
+  // Mostrar o modal (Bootstrap 5)
+  const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+  editModal.show();
 }
 
 /**
  * Confirma a edição vinda do modal
  */
 function confirmEdit() {
-    const index = document.getElementById('editIndex').value;
-    const listId = document.getElementById('editListId').value;
-    const type = document.getElementById('editType').value;
-    const description = document.getElementById('editDescription').value;
-    const value = parseFloat(document.getElementById('editValue').value);
+  const index = document.getElementById("editIndex").value;
+  const listId = document.getElementById("editListId").value;
+  const type = document.getElementById("editType").value;
+  const description = document.getElementById("editDescription").value;
+  const value = parseFloat(document.getElementById("editValue").value);
 
-    if (!validateInput(value, description, 'number')) return;
+  if (!validateInput(value, description, "number")) return;
 
-    let list;
-    if (listId === 'fixedCostsList') {
-        list = fixedCosts;
-    } else if (listId === 'variableCostsList') {
-        list = variableCosts;
-    } else {
-        list = workingHours;
-    }
+  let list;
+  if (listId === "fixedCostsList") {
+    list = fixedCosts;
+  } else if (listId === "variableCostsList") {
+    list = variableCosts;
+  } else {
+    list = workingHours;
+  }
 
-    const item = list[index];
-    item.description = description;
-    if (type === 'hours') {
-        item.availableHoursPerMonth = value;
-    } else {
-        item.cost = value;
-    }
+  const item = list[index];
+  item.description = description;
+  if (type === "hours") {
+    item.availableHoursPerMonth = value;
+  } else {
+    item.cost = value;
+  }
 
-    saveData();
-    updateList(listId, list, type);
+  saveData();
+  updateList(listId, list, type);
 
-    // Fechar o modal
-    const modalElement = document.getElementById('editModal');
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    modalInstance.hide();
-    
-    showNotification('Item atualizado com sucesso!', 'success');
+  // Fechar o modal
+  const modalElement = document.getElementById("editModal");
+  const modalInstance = bootstrap.Modal.getInstance(modalElement);
+  modalInstance.hide();
+
+  showNotification("Item atualizado com sucesso!", "success");
 }
 
 // Função para excluir item de uma lista
 function deleteItem(listId, index, type) {
-    let list;
-    if (listId === 'fixedCostsList') {
-        list = fixedCosts;
-    } else if (listId === 'variableCostsList') {
-        list = variableCosts;
-    } else {
-        list = workingHours;
-    }
-    list.splice(index, 1);
-    saveData();
-    updateList(listId, list, type);
+  let list;
+  if (listId === "fixedCostsList") {
+    list = fixedCosts;
+  } else if (listId === "variableCostsList") {
+    list = variableCosts;
+  } else {
+    list = workingHours;
+  }
+  list.splice(index, 1);
+  saveData();
+  updateList(listId, list, type);
 }
 
 // Função para alternar entre os tipos de cálculo
 function toggleCalculationType(type) {
-    const salaryGoalInput = document.getElementById('salaryGoal');
-    const customHourlyRateInput = document.getElementById('customHourlyRate');
+  const salaryGoalInput = document.getElementById("salaryGoal");
+  const customHourlyRateInput = document.getElementById("customHourlyRate");
 
-    if (type === 'salary') {
-        salaryGoalInput.disabled = false;
-        customHourlyRateInput.disabled = true;
-        customHourlyRateInput.value = ''; // Limpa o valor do campo desabilitado
-    } else if (type === 'hourlyRate') {
-        salaryGoalInput.disabled = true;
-        customHourlyRateInput.disabled = false;
-        salaryGoalInput.value = ''; // Limpa o valor do campo desabilitado
-    }
+  if (type === "salary") {
+    salaryGoalInput.disabled = false;
+    customHourlyRateInput.disabled = true;
+    customHourlyRateInput.value = ""; // Limpa o valor do campo desabilitado
+  } else if (type === "hourlyRate") {
+    salaryGoalInput.disabled = true;
+    customHourlyRateInput.disabled = false;
+    salaryGoalInput.value = ""; // Limpa o valor do campo desabilitado
+  }
 }
 
 // Função para calcular os valores
 function calculate() {
-    const salaryGoal = parseFloat(document.getElementById('salaryGoal').value); // Salário líquido desejado
-    const customHourlyRate = parseFloat(document.getElementById('customHourlyRate').value); // Valor da hora personalizado
+  const salaryGoal = parseFloat(document.getElementById("salaryGoal").value); // Salário líquido desejado
+  const customHourlyRate = parseFloat(
+    document.getElementById("customHourlyRate").value,
+  ); // Valor da hora personalizado
 
-    let totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
-    let totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
-    let totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+  let totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
+  let totalVariableCosts = variableCosts.reduce(
+    (sum, item) => sum + item.cost,
+    0,
+  );
+  let totalWorkingHours = workingHours.reduce(
+    (sum, item) => sum + item.availableHoursPerMonth,
+    0,
+  );
 
-    let hourlyRate = 0;
-    let projectTotal = 0;
+  let hourlyRate = 0;
+  let projectTotal = 0;
 
-    if (!isNaN(customHourlyRate) && customHourlyRate > 0) {
-        // Baseado no valor da hora fornecido
-        hourlyRate = customHourlyRate;
-        projectTotal = hourlyRate * totalWorkingHours;
-    } else if (!isNaN(salaryGoal) && salaryGoal > 0) {
-        // Baseado no salário líquido desejado
-        hourlyRate = (salaryGoal + totalFixedCosts + totalVariableCosts) / totalWorkingHours;
-        projectTotal = hourlyRate * totalWorkingHours;
-    } else {
-        alert('Informe pelo menos o salário líquido ou o valor da hora.');
-        return;
-    }
+  if (!isNaN(customHourlyRate) && customHourlyRate > 0) {
+    // Baseado no valor da hora fornecido
+    hourlyRate = customHourlyRate;
+    projectTotal = hourlyRate * totalWorkingHours;
+  } else if (!isNaN(salaryGoal) && salaryGoal > 0) {
+    // Baseado no salário líquido desejado
+    hourlyRate =
+      (salaryGoal + totalFixedCosts + totalVariableCosts) / totalWorkingHours;
+    projectTotal = hourlyRate * totalWorkingHours;
+  } else {
+    alert("Informe pelo menos o salário líquido ou o valor da hora.");
+    return;
+  }
 
-    // Exibir os resultados
-    document.getElementById("hourlyRate").innerText = hourlyRate.toFixed(2);
-    document.getElementById("projectTotal").innerText = projectTotal.toFixed(2);
-    document.getElementById("results").classList.remove("hidden");
+  // Exibir os resultados
+  document.getElementById("hourlyRate").innerText = hourlyRate.toFixed(2);
+  document.getElementById("projectTotal").innerText = projectTotal.toFixed(2);
+  document.getElementById("results").classList.remove("hidden");
+
+  // Gerar Gráfico
+  renderCharts(
+    totalFixedCosts,
+    totalVariableCosts,
+    projectTotal - totalFixedCosts - totalVariableCosts,
+  );
+}
+
+let costsChart = null;
+/**
+ * Renderiza o gráfico de distribuição de custos
+ */
+function renderCharts(fixed, variable, profit) {
+  const ctx = document.getElementById("costsChart").getContext("2d");
+
+  if (costsChart) {
+    costsChart.destroy();
+  }
+
+  costsChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Custos Fixos", "Custos Variáveis", "Lucro Estimado"],
+      datasets: [
+        {
+          data: [fixed, variable, profit],
+          backgroundColor: ["#6366f1", "#10b981", "#f59e0b"],
+          borderWidth: 0,
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: { position: "bottom", labels: { color: "#f8fafc" } },
+      },
+    },
+  });
+}
+
+/**
+ * Exporta os resultados para PDF
+ */
+function exportToPDF() {
+  const element = document.getElementById("results");
+  const opt = {
+    margin: 10,
+    filename: "Orcamento_Freelancer.pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, backgroundColor: "#0f172a" },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  };
+  html2pdf().set(opt).from(element).save();
 }
 
 // Função para calcular as taxas
 function calculateTaxes(monthlyRevenue) {
-    const simplesTaxRate = TAX_RATES.simplesNacional.ranges.find(r => monthlyRevenue * 12 <= r.maxRevenue)?.rate || 0;
-    const totalTaxRate = simplesTaxRate + TAX_RATES.inss + TAX_RATES.iR + TAX_RATES.administration + TAX_RATES.contingency;
+  const simplesTaxRate =
+    TAX_RATES.simplesNacional.ranges.find(
+      (r) => monthlyRevenue * 12 <= r.maxRevenue,
+    )?.rate || 0;
+  const totalTaxRate =
+    simplesTaxRate +
+    TAX_RATES.inss +
+    TAX_RATES.iR +
+    TAX_RATES.administration +
+    TAX_RATES.contingency;
 
-    return {
-        simples: monthlyRevenue * simplesTaxRate,
-        inss: monthlyRevenue * TAX_RATES.inss,
-        ir: monthlyRevenue * TAX_RATES.iR,
-        admin: monthlyRevenue * TAX_RATES.administration,
-        contingency: monthlyRevenue * TAX_RATES.contingency,
-        total: monthlyRevenue * totalTaxRate
-    };
+  return {
+    simples: monthlyRevenue * simplesTaxRate,
+    inss: monthlyRevenue * TAX_RATES.inss,
+    ir: monthlyRevenue * TAX_RATES.iR,
+    admin: monthlyRevenue * TAX_RATES.administration,
+    contingency: monthlyRevenue * TAX_RATES.contingency,
+    total: monthlyRevenue * totalTaxRate,
+  };
 }
 
 // Função para coletar os dados do freelancer (evita solicitações repetidas)
 async function collectFreelancerData() {
-    if (!freelancerData) {
-        freelancerData = {
-            name: prompt("Digite seu nome completo:", "Seu Nome"),
-            email: prompt("Digite seu e-mail:", "seuemail@exemplo.com"),
-            whatsApp: prompt("Digite seu WhatsApp:", "(11) 98765-4321"),
-            projectName: prompt("Digite o nome do projeto:", "Desenvolvimento de Software")
-        };
-    }
-    return freelancerData;
+  if (!freelancerData) {
+    freelancerData = {
+      name: prompt("Digite seu nome completo:", "Seu Nome"),
+      email: prompt("Digite seu e-mail:", "seuemail@exemplo.com"),
+      whatsApp: prompt("Digite seu WhatsApp:", "(11) 98765-4321"),
+      projectName: prompt(
+        "Digite o nome do projeto:",
+        "Desenvolvimento de Software",
+      ),
+    };
+  }
+  return freelancerData;
 }
 
 // Função para abrir pop-ups ou exibir conteúdo na página
 function openPopup(content, title) {
-    const popup = window.open("", title, "width=600,height=600");
-    if (popup) {
-        popup.document.write(`<pre>${content}</pre>`);
-        popup.document.close();
-    } else {
-        alert("Pop-up bloqueado! O conteúdo será exibido abaixo.");
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = `<pre>${content}</pre>`;
-    }
+  const popup = window.open("", title, "width=600,height=600");
+  if (popup) {
+    popup.document.write(`<pre>${content}</pre>`);
+    popup.document.close();
+  } else {
+    alert("Pop-up bloqueado! O conteúdo será exibido abaixo.");
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = `<pre>${content}</pre>`;
+  }
 }
 
 // Função para gerar o orçamento para o cliente
 async function generateClientBudget() {
-    console.log("Gerando orçamento para o cliente...");
-    const data = await collectFreelancerData();
-    const projectTotal = parseFloat(document.getElementById("projectTotal").innerText.replace("R$", "").trim()) || 0;
-    const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText.replace("R$", "").trim()) || 0;
-    const currentDate = new Date().toLocaleDateString("pt-BR");
+  console.log("Gerando orçamento para o cliente...");
+  const data = await collectFreelancerData();
+  const projectTotal =
+    parseFloat(
+      document
+        .getElementById("projectTotal")
+        .innerText.replace("R$", "")
+        .trim(),
+    ) || 0;
+  const hourlyRate =
+    parseFloat(
+      document.getElementById("hourlyRate").innerText.replace("R$", "").trim(),
+    ) || 0;
+  const currentDate = new Date().toLocaleDateString("pt-BR");
 
-    // Cálculos adicionais
-    const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+  // Cálculos adicionais
+  const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
+  const totalVariableCosts = variableCosts.reduce(
+    (sum, item) => sum + item.cost,
+    0,
+  );
+  const totalWorkingHours = workingHours.reduce(
+    (sum, item) => sum + item.availableHoursPerMonth,
+    0,
+  );
 
-    // Cálculo das taxas
-    const taxesBreakdown = calculateTaxes(projectTotal);
+  // Cálculo das taxas
+  const taxesBreakdown = calculateTaxes(projectTotal);
 
-    // Conteúdo do orçamento para o cliente
-    const budgetContentForClient = `
+  // Conteúdo do orçamento para o cliente
+  const budgetContentForClient = `
 ==============================
 ORÇAMENTO PARA CLIENTE
 ==============================
@@ -337,45 +439,62 @@ IMPOSTOS DETALHADOS:
 ==============================
 `;
 
-    // Exibir o orçamento
-    openPopup(budgetContentForClient, "Orçamento para o Cliente");
+  // Exibir o orçamento
+  openPopup(budgetContentForClient, "Orçamento para o Cliente");
 
-    // Opção para salvar o orçamento como arquivo de texto
-    const blob = new Blob([budgetContentForClient], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Orcamento_Cliente_${currentDate.replace(/\//g, "-")}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  // Opção para salvar o orçamento como arquivo de texto
+  const blob = new Blob([budgetContentForClient], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Orcamento_Cliente_${currentDate.replace(/\//g, "-")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // Função para gerar o relatório completo para o freelancer
 async function generateFreelancerReport() {
-    console.log("Gerando relatório para o freelancer...");
-    const data = await collectFreelancerData();
-    const projectTotal = parseFloat(document.getElementById("projectTotal").innerText.replace("R$", "").trim()) || 0;
-    const hourlyRate = parseFloat(document.getElementById("hourlyRate").innerText.replace("R$", "").trim()) || 0;
-    const currentDate = new Date().toLocaleDateString("pt-BR");
+  console.log("Gerando relatório para o freelancer...");
+  const data = await collectFreelancerData();
+  const projectTotal =
+    parseFloat(
+      document
+        .getElementById("projectTotal")
+        .innerText.replace("R$", "")
+        .trim(),
+    ) || 0;
+  const hourlyRate =
+    parseFloat(
+      document.getElementById("hourlyRate").innerText.replace("R$", "").trim(),
+    ) || 0;
+  const currentDate = new Date().toLocaleDateString("pt-BR");
 
-    // Cálculos adicionais
-    const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalVariableCosts = variableCosts.reduce((sum, item) => sum + item.cost, 0);
-    const totalWorkingHours = workingHours.reduce((sum, item) => sum + item.availableHoursPerMonth, 0);
+  // Cálculos adicionais
+  const totalFixedCosts = fixedCosts.reduce((sum, item) => sum + item.cost, 0);
+  const totalVariableCosts = variableCosts.reduce(
+    (sum, item) => sum + item.cost,
+    0,
+  );
+  const totalWorkingHours = workingHours.reduce(
+    (sum, item) => sum + item.availableHoursPerMonth,
+    0,
+  );
 
-    // Cálculo das taxas
-    const taxesBreakdown = calculateTaxes(projectTotal);
+  // Cálculo das taxas
+  const taxesBreakdown = calculateTaxes(projectTotal);
 
-    // Reservas e benefícios
-    const salaryGoal = parseFloat(document.getElementById("salaryGoal").value) || 0;
-    const contingencyReserve = salaryGoal * 6; // Reserva para 6 meses
-    const monthlyContingencyReserve = salaryGoal * 0.20; // 20% da receita mensal
-    const monthsToSaveContingency = contingencyReserve / monthlyContingencyReserve;
-    const monthly13thReserve = salaryGoal / 12; // Reserva para o 13º salário
-    const vacationReserve = salaryGoal / 12; // Reserva para férias (1/12 do salário)
+  // Reservas e benefícios
+  const salaryGoal =
+    parseFloat(document.getElementById("salaryGoal").value) || 0;
+  const contingencyReserve = salaryGoal * 6; // Reserva para 6 meses
+  const monthlyContingencyReserve = salaryGoal * 0.2; // 20% da receita mensal
+  const monthsToSaveContingency =
+    contingencyReserve / monthlyContingencyReserve;
+  const monthly13thReserve = salaryGoal / 12; // Reserva para o 13º salário
+  const vacationReserve = salaryGoal / 12; // Reserva para férias (1/12 do salário)
 
-    // Conteúdo do relatório para o freelancer
-    const reportContentForFreelancer = `
+  // Conteúdo do relatório para o freelancer
+  const reportContentForFreelancer = `
 ==============================
 RELATÓRIO COMPLETO PARA O FREELANCER
 ==============================
@@ -409,20 +528,20 @@ RESERVAS E BENEFÍCIOS:
 ==============================
 `;
 
-    // Exibir o relatório
-    openPopup(reportContentForFreelancer, "Relatório para o Freelancer");
+  // Exibir o relatório
+  openPopup(reportContentForFreelancer, "Relatório para o Freelancer");
 
-    // Opção para salvar o relatório como arquivo de texto
-    const blob = new Blob([reportContentForFreelancer], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Relatorio_Freelancer_${currentDate.replace(/\//g, "-")}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  // Opção para salvar o relatório como arquivo de texto
+  const blob = new Blob([reportContentForFreelancer], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Relatorio_Freelancer_${currentDate.replace(/\//g, "-")}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // Inicialização ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('results').classList.add('hidden');
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("results").classList.add("hidden");
 });

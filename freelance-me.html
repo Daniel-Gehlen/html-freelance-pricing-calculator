@@ -188,6 +188,37 @@
         <button onclick="generateClientBudget(); generateFreelancerReport();">Gerar Orçamento e Relatório</button>
     </div>
 
+    <!-- Modal para Edição (Reutilizável) -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="editModalLabel">Editar Item</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editIndex">
+                        <input type="hidden" id="editListId">
+                        <input type="hidden" id="editType">
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Descrição</label>
+                            <input type="text" class="form-control bg-secondary text-white border-0" id="editDescription" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editValue" class="form-label">Valor / Horas</label>
+                            <input type="number" step="0.01" class="form-control bg-secondary text-white border-0" id="editValue" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmEdit()">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS e dependências -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>

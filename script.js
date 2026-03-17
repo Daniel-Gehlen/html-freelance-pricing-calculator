@@ -138,19 +138,56 @@ function editItem(listId, index, type) {
     }
     const item = list[index];
 
-    const description = prompt('Nova descrição:', item.description);
-    const value = parseFloat(prompt('Novo valor:', type === 'hours' ? item.availableHoursPerMonth : item.cost));
+    // Preencher o modal
+    document.getElementById('editIndex').value = index;
+    document.getElementById('editListId').value = listId;
+    document.getElementById('editType').value = type;
+    document.getElementById('editDescription').value = item.description;
+    document.getElementById('editValue').value = type === 'hours' ? item.availableHoursPerMonth : item.cost;
 
-    if (description !== null && !isNaN(value)) {
-        item.description = description;
-        if (type === 'hours') {
-            item.availableHoursPerMonth = value;
-        } else {
-            item.cost = value;
-        }
-        saveData();
-        updateList(listId, list, type);
+    // Mostrar o modal (Bootstrap 5)
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    editModal.show();
+}
+
+/**
+ * Confirma a edição vinda do modal
+ */
+function confirmEdit() {
+    const index = document.getElementById('editIndex').value;
+    const listId = document.getElementById('editListId').value;
+    const type = document.getElementById('editType').value;
+    const description = document.getElementById('editDescription').value;
+    const value = parseFloat(document.getElementById('editValue').value);
+
+    if (!validateInput(value, description, 'number')) return;
+
+    let list;
+    if (listId === 'fixedCostsList') {
+        list = fixedCosts;
+    } else if (listId === 'variableCostsList') {
+        list = variableCosts;
+    } else {
+        list = workingHours;
     }
+
+    const item = list[index];
+    item.description = description;
+    if (type === 'hours') {
+        item.availableHoursPerMonth = value;
+    } else {
+        item.cost = value;
+    }
+
+    saveData();
+    updateList(listId, list, type);
+
+    // Fechar o modal
+    const modalElement = document.getElementById('editModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    modalInstance.hide();
+    
+    showNotification('Item atualizado com sucesso!', 'success');
 }
 
 // Função para excluir item de uma lista

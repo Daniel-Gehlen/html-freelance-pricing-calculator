@@ -1,0 +1,20 @@
+{
+  "name": "html-freelance-pricing-calculator",
+  "version": "1.0.0",
+  "description": "## Introduction This technical report describes the implementation of a Freelancer Pricing Calculator, a web application that allows users to calculate and visualize costs and values related to freelance projects. The application was developed using HTML, CSS, and JavaScript, and includes CRUD (Create, Read, Update, Delete) functionalities to manage fixed costs, variable costs, and working hours.",
+  "main": "budget.js",
+  "scripts": {
+    "test:links": "linkinator index.html freelance-me.html freelance-mei.html",
+    "format": "prettier --write .",
+    "test": "npm run test:links"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "linkinator": "^7.6.1",
+    "playwright": "^1.58.2",
+    "prettier": "^3.8.1"
+  }
+}

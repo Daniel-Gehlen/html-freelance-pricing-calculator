@@ -24,8 +24,31 @@ let workingHours = [];
 let workDays = [];
 let extraHours = [];
 
-// Variável global para armazenar os dados do freelancer
-let freelancerData = null;
+// Variável global para armazenar os dados do freelancer (persistente)
+let freelancerData = JSON.parse(localStorage.getItem('freelancerData')) || null;
+
+/**
+ * Salva os estados atuais no LocalStorage
+ */
+function saveData() {
+    localStorage.setItem('fixedCosts', JSON.stringify(fixedCosts));
+    localStorage.setItem('variableCosts', JSON.stringify(variableCosts));
+    localStorage.setItem('workingHours', JSON.stringify(workingHours));
+    localStorage.setItem('freelancerData', JSON.stringify(freelancerData));
+}
+
+/**
+ * Carrega os estados do LocalStorage e atualiza a interface
+ */
+function loadData() {
+    fixedCosts = JSON.parse(localStorage.getItem('fixedCosts')) || [];
+    variableCosts = JSON.parse(localStorage.getItem('variableCosts')) || [];
+    workingHours = JSON.parse(localStorage.getItem('workingHours')) || [];
+    
+    updateList('fixedCostsList', fixedCosts, 'cost');
+    updateList('variableCostsList', variableCosts, 'cost');
+    updateList('workingHoursList', workingHours, 'hours');
+}
 
 // Função para adicionar item a uma lista
 function addItem(listId, descriptionId, valueId, type) {
@@ -51,6 +74,8 @@ function addItem(listId, descriptionId, valueId, type) {
     } else if (listId === 'workingHoursList') {
         workingHours.push(item);
     }
+
+    saveData();
 
     // Atualiza a lista no HTML
     updateList(listId, listId === 'fixedCostsList' ? fixedCosts : listId === 'variableCostsList' ? variableCosts : workingHours, type);
@@ -98,6 +123,7 @@ function editItem(listId, index, type) {
         } else {
             item.cost = value;
         }
+        saveData();
         updateList(listId, list, type);
     }
 }
@@ -113,6 +139,7 @@ function deleteItem(listId, index, type) {
         list = workingHours;
     }
     list.splice(index, 1);
+    saveData();
     updateList(listId, list, type);
 }
 

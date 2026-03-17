@@ -1,0 +1,18 @@
+# Documentos e arquivos locais
+*.txt
+*.pdf
+*.log
+*.tmp
+node_modules/
+.DS_Store
+.vscode/
+.idea/
+
+# Binários e imagens de demonstração
+# calc-freelancer.gif
+# image.png
+
+# Pasta de dados da IA (se estiver no repo)
+.gemini/
+.agents/
+brain/

@@ -24,6 +24,36 @@ let workingHours = [];
 let workDays = [];
 let extraHours = [];
 
+/**
+ * Sistema de Notificações Global (Melhor que alert)
+ */
+function showNotification(message, type = 'info') {
+    console.log(`[${type.toUpperCase()}] ${message}`);
+    // Futuramente podemos integrar com um sistema de Toast
+    alert(message); 
+}
+
+/**
+ * Validação de entrada genérica
+ */
+function validateInput(value, description, type = 'number') {
+    if (!description || description.trim() === '') {
+        showNotification('A descrição não pode estar vazia!', 'error');
+        return false;
+    }
+    if (type === 'number' && (isNaN(value) || value <= 0)) {
+        showNotification('O valor deve ser um número maior que zero!', 'error');
+        return false;
+    }
+    return true;
+}
+
+// Tratamento de Erros Global
+window.onerror = function (message, source, lineno, colno, error) {
+    showNotification(`Erro inesperado: ${message}`, 'error');
+    return true;
+};
+
 // Variável global para armazenar os dados do freelancer (persistente)
 let freelancerData = JSON.parse(localStorage.getItem('freelancerData')) || null;
 
@@ -55,13 +85,8 @@ function addItem(listId, descriptionId, valueId, type) {
     const description = document.getElementById(descriptionId).value.trim();
     const value = parseFloat(document.getElementById(valueId).value);
 
-    if (!description) {
-        alert('A descrição não pode estar vazia!');
-        return;
-    }
-
-    if (isNaN(value) || value <= 0) {
-        alert('O valor deve ser um número maior que zero!');
+    // Validação usando o novo helper
+    if (!validateInput(value, description, 'number')) {
         return;
     }
 

@@ -1,192 +1,378 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora de Precificação Freelancer MEI</title>
     <!-- Meta tags para compartilhamento universal -->
-    <meta property="og:title" content="Calculadora de Precificação Freelancer">
-    <meta property="og:description"
-        content="Calcule o valor do seu trabalho de forma precisa e justa. Considere custos, impostos e seu lucro desejado.">
-    <meta property="og:image"
-        content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/share-image.jpg">
-    <meta property="og:url" content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/">
-    <meta property="og:type" content="website">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <meta
+      property="og:title"
+      content="Calculadora de Precificação Freelancer"
+    />
+    <meta
+      property="og:description"
+      content="Calcule o valor do seu trabalho de forma precisa e justa. Considere custos, impostos e seu lucro desejado."
+    />
+    <meta
+      property="og:image"
+      content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/share-image.jpg"
+    />
+    <meta
+      property="og:url"
+      content="https://daniel-gehlen.github.io/html-freelance-pricing-calculator/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  </head>
 
-<body>
-
+  <body>
     <!-- Navbar Elegante com Bootstrap -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="freelance-me.html">Free Lance ME</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="freelance-mei.html">Free Lance MEI</a>
-                    </li>
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="freelance-me.html"
+                >Free Lance ME</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="freelance-mei.html">Free Lance MEI</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container">
-        <h1>Calculadora de Precificação Freelancer MEI</h1>
-        <div class="row">
-            <div class="col">
-                <!-- Custos Fixos -->
-                <div class="crud-section">
-                    <h2>Custos Fixos</h2>
-                    <p>
-                        Adicione aqui os custos fixos mensais que você tem, independentemente dos projetos.
-                        Esses são gastos recorrentes que você precisa cobrir todos os meses.
-                        <br>
-                        <strong>Exemplos:</strong> Aluguel do escritório (R$ 800,00), Internet (R$ 120,00), Software de
-                        desenvolvimento (R$ 200,00).
-                    </p>
-                    <div id="fixedCostsList"></div>
-                    <div>
-                        <input type="text" id="newFixedCostDescription"
-                            placeholder="Descrição (ex: Aluguel do escritório)">
-                        <input type="number" id="newFixedCost" placeholder="Valor (ex: 800.00)">
-                        <button
-                            onclick="addItem('fixedCostsList', 'newFixedCostDescription', 'newFixedCost', 'cost')">Adicionar</button>
-                    </div>
-                </div>
-
-                <!-- Custos Variáveis -->
-                <div class="crud-section">
-                    <h2>Custos Variáveis</h2>
-                    <p>
-                        Adicione aqui os custos que variam de acordo com o projeto. Esses são gastos que dependem
-                        do tipo de trabalho que você está realizando.
-                        <br>
-                        <strong>Exemplos:</strong> Hospedagem de servidor (R$ 50,00 por projeto), Licenças de software
-                        (R$ 100,00 por projeto).
-                    </p>
-                    <div id="variableCostsList"></div>
-                    <div>
-                        <input type="text" id="newVariableCostDescription"
-                            placeholder="Descrição (ex: Hospedagem de servidor)">
-                        <input type="number" id="newVariableCost" placeholder="Valor (ex: 50.00)">
-                        <button
-                            onclick="addItem('variableCostsList', 'newVariableCostDescription', 'newVariableCost', 'cost')">Adicionar</button>
-                    </div>
-                </div>
-
-                <!-- Horas Úteis -->
-                <div class="crud-section">
-                    <h2>Horas Úteis</h2>
-                    <p>
-                        Adicione aqui as atividades que você realiza e quantas horas por mês dedica a cada uma.
-                        Isso ajudará a calcular quanto tempo você tem disponível para trabalhar.
-                        <br>
-                        <strong>Exemplos:</strong> Desenvolvimento de código (80 horas/mês), Reuniões com clientes (10
-                        horas/mês).
-                    </p>
-                    <div id="workingHoursList"></div>
-                    <div>
-                        <input type="text" id="newWorkingHourDescription"
-                            placeholder="Descrição (ex: Desenvolvimento de código)">
-                        <input type="number" id="newWorkingHour" placeholder="Horas por mês (ex: 80)">
-                        <button
-                            onclick="addItem('workingHoursList', 'newWorkingHourDescription', 'newWorkingHour', 'hours')">Adicionar</button>
-                    </div>
-                </div>
+      <h1>Calculadora de Precificação Freelancer MEI</h1>
+      <div class="row">
+        <div class="col">
+          <!-- Custos Fixos -->
+          <div class="crud-section">
+            <h2>Custos Fixos</h2>
+            <p>
+              Adicione aqui os custos fixos mensais que você tem,
+              independentemente dos projetos. Esses são gastos recorrentes que
+              você precisa cobrir todos os meses.
+              <br />
+              <strong>Exemplos:</strong> Aluguel do escritório (R$ 800,00),
+              Internet (R$ 120,00), Software de desenvolvimento (R$ 200,00).
+            </p>
+            <div id="fixedCostsList"></div>
+            <div>
+              <input
+                type="text"
+                id="newFixedCostDescription"
+                placeholder="Descrição (ex: Aluguel do escritório)"
+              />
+              <input
+                type="number"
+                id="newFixedCost"
+                placeholder="Valor (ex: 800.00)"
+              />
+              <button
+                onclick="
+                  addItem(
+                    'fixedCostsList',
+                    'newFixedCostDescription',
+                    'newFixedCost',
+                    'cost',
+                  )
+                "
+              >
+                Adicionar
+              </button>
             </div>
+          </div>
 
-            <div class="col">
-                <!-- Precificação -->
-                <div class="crud-section">
-                    <h2>Precificação</h2>
-                    <p>
-                        Escolha como deseja calcular o valor do projeto:
-                    </p>
-                    <div>
-                        <label>
-                            <input type="radio" name="calculationType" value="salary" checked
-                                onclick="toggleCalculationType('salary')">
-                            Com base no Salário Líquido Desejado
-                        </label>
-                        <label>
-                            <input type="radio" name="calculationType" value="hourlyRate"
-                                onclick="toggleCalculationType('hourlyRate')">
-                            Com base no Valor Hora Personalizado
-                        </label>
-                    </div>
-                    <form id="pricingForm">
-                        <div class="input-group">
-                            <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
-                            <input type="number" id="salaryGoal" placeholder="Ex: 5000" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="customHourlyRate">Valor Hora Personalizado (R$)</label>
-                            <input type="number" id="customHourlyRate" placeholder="Ex: 100.00" step="0.01" disabled>
-                        </div>
-                        <button type="button" onclick="calculate()">Calcular</button>
-                    </form>
-                </div>
-
-                <!-- Calendário de Trabalho -->
-                <div class="crud-section">
-                    <h2>Calendário de Trabalho</h2>
-                    <p>
-                        Marque os dias de trabalho e horas extras diretamente no calendário.
-                    </p>
-                    <div class="calendar-controls">
-                        <button onclick="markAllDays()">Marcar Todos</button>
-                        <button onclick="unmarkAllDays()">Desmarcar Todos</button>
-                        <div class="month-navigation">
-                            <button onclick="prevMonth()">◀</button>
-                            <span id="currentMonthYear"></span>
-                            <button onclick="nextMonth()">▶</button>
-                        </div>
-                        <select id="yearSelect" onchange="changeYear()"></select>
-                    </div>
-                    <div id="calendar"></div>
-                </div>
-
-                <!-- Calendário de Horas Extras -->
-                <div class="crud-section">
-                    <h2>Horas Extras</h2>
-                    <p>
-                        Adicione horas extras para dias específicos.
-                    </p>
-                    <div id="extraHoursList"></div>
-                    <div>
-                        <label for="extraDate">Data:</label>
-                        <input type="date" id="extraDate">
-                        <label for="extraHours">Horas Extras:</label>
-                        <input type="number" id="extraHours" placeholder="Ex: 4" step="0.5" min="0">
-                        <button onclick="addExtraHours()">Adicionar Horas Extras</button>
-                    </div>
-                </div>
+          <!-- Custos Variáveis -->
+          <div class="crud-section">
+            <h2>Custos Variáveis</h2>
+            <p>
+              Adicione aqui os custos que variam de acordo com o projeto. Esses
+              são gastos que dependem do tipo de trabalho que você está
+              realizando.
+              <br />
+              <strong>Exemplos:</strong> Hospedagem de servidor (R$ 50,00 por
+              projeto), Licenças de software (R$ 100,00 por projeto).
+            </p>
+            <div id="variableCostsList"></div>
+            <div>
+              <input
+                type="text"
+                id="newVariableCostDescription"
+                placeholder="Descrição (ex: Hospedagem de servidor)"
+              />
+              <input
+                type="number"
+                id="newVariableCost"
+                placeholder="Valor (ex: 50.00)"
+              />
+              <button
+                onclick="
+                  addItem(
+                    'variableCostsList',
+                    'newVariableCostDescription',
+                    'newVariableCost',
+                    'cost',
+                  )
+                "
+              >
+                Adicionar
+              </button>
             </div>
+          </div>
+
+          <!-- Horas Úteis -->
+          <div class="crud-section">
+            <h2>Horas Úteis</h2>
+            <p>
+              Adicione aqui as atividades que você realiza e quantas horas por
+              mês dedica a cada uma. Isso ajudará a calcular quanto tempo você
+              tem disponível para trabalhar.
+              <br />
+              <strong>Exemplos:</strong> Desenvolvimento de código (80
+              horas/mês), Reuniões com clientes (10 horas/mês).
+            </p>
+            <div id="workingHoursList"></div>
+            <div>
+              <input
+                type="text"
+                id="newWorkingHourDescription"
+                placeholder="Descrição (ex: Desenvolvimento de código)"
+              />
+              <input
+                type="number"
+                id="newWorkingHour"
+                placeholder="Horas por mês (ex: 80)"
+              />
+              <button
+                onclick="
+                  addItem(
+                    'workingHoursList',
+                    'newWorkingHourDescription',
+                    'newWorkingHour',
+                    'hours',
+                  )
+                "
+              >
+                Adicionar
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Resultados -->
-        <div id="results" class="hidden">
-            <h2>Resultados</h2>
+        <div class="col">
+          <!-- Precificação -->
+          <div class="crud-section">
+            <h2>Precificação</h2>
+            <p>Escolha como deseja calcular o valor do projeto:</p>
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="calculationType"
+                  value="salary"
+                  checked
+                  onclick="toggleCalculationType('salary')"
+                />
+                Com base no Salário Líquido Desejado
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="calculationType"
+                  value="hourlyRate"
+                  onclick="toggleCalculationType('hourlyRate')"
+                />
+                Com base no Valor Hora Personalizado
+              </label>
+            </div>
+            <form id="pricingForm">
+              <div class="input-group">
+                <label for="salaryGoal">Salário Líquido Desejado (R$)</label>
+                <input
+                  type="number"
+                  id="salaryGoal"
+                  placeholder="Ex: 5000"
+                  required
+                />
+              </div>
+              <div class="input-group">
+                <label for="customHourlyRate"
+                  >Valor Hora Personalizado (R$)</label
+                >
+                <input
+                  type="number"
+                  id="customHourlyRate"
+                  placeholder="Ex: 100.00"
+                  step="0.01"
+                  disabled
+                />
+              </div>
+              <button type="button" onclick="calculate()">Calcular</button>
+            </form>
+          </div>
+
+          <!-- Calendário de Trabalho -->
+          <div class="crud-section">
+            <h2>Calendário de Trabalho</h2>
             <p>
-                Aqui estão os resultados calculados com base nas informações fornecidas.
-                Use esses valores para definir o preço do seu projeto e garantir que todos os custos sejam cobertos.
+              Marque os dias de trabalho e horas extras diretamente no
+              calendário.
+            </p>
+            <div class="calendar-controls">
+              <button onclick="markAllDays()">Marcar Todos</button>
+              <button onclick="unmarkAllDays()">Desmarcar Todos</button>
+              <div class="month-navigation">
+                <button onclick="prevMonth()">◀</button>
+                <span id="currentMonthYear"></span>
+                <button onclick="nextMonth()">▶</button>
+              </div>
+              <select id="yearSelect" onchange="changeYear()"></select>
+            </div>
+            <div id="calendar"></div>
+          </div>
+
+          <!-- Calendário de Horas Extras -->
+          <div class="crud-section">
+            <h2>Horas Extras</h2>
+            <p>Adicione horas extras para dias específicos.</p>
+            <div id="extraHoursList"></div>
+            <div>
+              <label for="extraDate">Data:</label>
+              <input type="date" id="extraDate" />
+              <label for="extraHours">Horas Extras:</label>
+              <input
+                type="number"
+                id="extraHours"
+                placeholder="Ex: 4"
+                step="0.5"
+                min="0"
+              />
+              <button onclick="addExtraHours()">Adicionar Horas Extras</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div id="results" class="hidden">
+        <h2>Resultados</h2>
+        <div class="row">
+          <div class="col-md-6">
+            <p>
+              Aqui estão os resultados calculados com base nas informações
+              fornecidas.
             </p>
             <div class="result-grid">
-                <div><strong>Valor Hora Base:</strong> <span id="hourlyRate"></span></div>
-                <div><strong>Valor Total do Projeto:</strong> <span id="projectTotal"></span></div>
+              <div>
+                <strong>Valor Hora Base:</strong> R$
+                <span id="hourlyRate"></span>
+              </div>
+              <div>
+                <strong>Valor Total do Projeto:</strong> R$
+                <span id="projectTotal"></span>
+              </div>
             </div>
+          </div>
+          <div class="col-md-6">
+            <canvas id="costsChart"></canvas>
+          </div>
         </div>
-        <!-- Botão para gerar o orçamento -->
-        <button onclick="generateClientBudget(); generateFreelancerReport();">Gerar Orçamento e Relatório</button>
+      </div>
+      <!-- Botões de Ação -->
+      <div class="mt-4 d-flex gap-2">
+        <button
+          class="btn btn-primary flex-grow-1"
+          onclick="
+            generateClientBudget();
+            generateFreelancerReport();
+          "
+        >
+          Gerar Relatórios (TXT)
+        </button>
+        <button class="btn btn-success flex-grow-1" onclick="exportToPDF()">
+          Exportar para PDF Profissional
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal para Edição (Reutilizável) -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title" id="editModalLabel">Editar Item</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm">
+              <input type="hidden" id="editIndex" />
+              <input type="hidden" id="editListId" />
+              <input type="hidden" id="editType" />
+              <div class="mb-3">
+                <label for="editDescription" class="form-label"
+                  >Descrição</label
+                >
+                <input
+                  type="text"
+                  class="form-control bg-secondary text-white border-0"
+                  id="editDescription"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editValue" class="form-label">Valor / Horas</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  class="form-control bg-secondary text-white border-0"
+                  id="editValue"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button
+              type="button"
+              class="btn btn-outline-light"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="confirmEdit()"
+            >
+              Salvar Alterações
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Bootstrap JS e dependências -->
@@ -197,110 +383,114 @@
     <!-- Seu JS personalizado -->
     <script src="script-mei.js"></script>
     <script>
-        let currentMonth = moment().month();
-        let currentYear = moment().year();
+      let currentMonth = moment().month();
+      let currentYear = moment().year();
 
-        // Função para renderizar o calendário
-        function renderCalendar() {
-            const calendar = document.getElementById('calendar');
-            const daysInMonth = moment(`${currentYear}-${currentMonth + 1}`, "YYYY-MM").daysInMonth();
-            const today = moment().date();
+      // Função para renderizar o calendário
+      function renderCalendar() {
+        const calendar = document.getElementById("calendar");
+        const daysInMonth = moment(
+          `${currentYear}-${currentMonth + 1}`,
+          "YYYY-MM",
+        ).daysInMonth();
+        const today = moment().date();
 
-            let calendarHTML = '<div class="calendar-grid">';
-            for (let day = 1; day <= daysInMonth; day++) {
-                calendarHTML += `
-                    <div class="day ${day === today && currentMonth === moment().month() ? 'today' : ''}" onclick="toggleDay(this)">
+        let calendarHTML = '<div class="calendar-grid">';
+        for (let day = 1; day <= daysInMonth; day++) {
+          calendarHTML += `
+                    <div class="day ${day === today && currentMonth === moment().month() ? "today" : ""}" onclick="toggleDay(this)">
                         ${day}
                     </div>
                 `;
-            }
-            calendarHTML += '</div>';
-            calendar.innerHTML = calendarHTML;
+        }
+        calendarHTML += "</div>";
+        calendar.innerHTML = calendarHTML;
 
-            // Atualizar o ano no seletor
-            const yearSelect = document.getElementById('yearSelect');
-            yearSelect.innerHTML = '';
-            for (let year = currentYear - 10; year <= currentYear + 10; year++) {
-                yearSelect.innerHTML += `<option value="${year}" ${year === currentYear ? 'selected' : ''}>${year}</option>`;
-            }
-
-            // Atualizar o nome do mês e ano
-            const currentMonthYear = document.getElementById('currentMonthYear');
-            currentMonthYear.textContent = moment().month(currentMonth).format('MMMM YYYY');
+        // Atualizar o ano no seletor
+        const yearSelect = document.getElementById("yearSelect");
+        yearSelect.innerHTML = "";
+        for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+          yearSelect.innerHTML += `<option value="${year}" ${year === currentYear ? "selected" : ""}>${year}</option>`;
         }
 
-        // Função para marcar/desmarcar um dia
-        function toggleDay(dayElement) {
-            dayElement.classList.toggle('work-day');
+        // Atualizar o nome do mês e ano
+        const currentMonthYear = document.getElementById("currentMonthYear");
+        currentMonthYear.textContent = moment()
+          .month(currentMonth)
+          .format("MMMM YYYY");
+      }
+
+      // Função para marcar/desmarcar um dia
+      function toggleDay(dayElement) {
+        dayElement.classList.toggle("work-day");
+      }
+
+      // Função para marcar todos os dias
+      function markAllDays() {
+        const days = document.querySelectorAll(".day");
+        days.forEach((day) => day.classList.add("work-day"));
+      }
+
+      // Função para desmarcar todos os dias
+      function unmarkAllDays() {
+        const days = document.querySelectorAll(".day");
+        days.forEach((day) => day.classList.remove("work-day"));
+      }
+
+      // Função para mudar de mês
+      function prevMonth() {
+        currentMonth--;
+        if (currentMonth < 0) {
+          currentMonth = 11;
+          currentYear--;
+        }
+        renderCalendar();
+      }
+
+      function nextMonth() {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        renderCalendar();
+      }
+
+      // Função para mudar de ano
+      function changeYear() {
+        currentYear = parseInt(document.getElementById("yearSelect").value);
+        renderCalendar();
+      }
+
+      // Função para adicionar horas extras
+      function addExtraHours() {
+        const date = document.getElementById("extraDate").value;
+        const hours = parseFloat(document.getElementById("extraHours").value);
+
+        if (!date || isNaN(hours) || hours <= 0) {
+          alert("Por favor, preencha a data e as horas extras corretamente.");
+          return;
         }
 
-        // Função para marcar todos os dias
-        function markAllDays() {
-            const days = document.querySelectorAll('.day');
-            days.forEach(day => day.classList.add('work-day'));
-        }
-
-        // Função para desmarcar todos os dias
-        function unmarkAllDays() {
-            const days = document.querySelectorAll('.day');
-            days.forEach(day => day.classList.remove('work-day'));
-        }
-
-        // Função para mudar de mês
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar();
-        }
-
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar();
-        }
-
-        // Função para mudar de ano
-        function changeYear() {
-            currentYear = parseInt(document.getElementById('yearSelect').value);
-            renderCalendar();
-        }
-
-        // Função para adicionar horas extras
-        function addExtraHours() {
-            const date = document.getElementById('extraDate').value;
-            const hours = parseFloat(document.getElementById('extraHours').value);
-
-            if (!date || isNaN(hours) || hours <= 0) {
-                alert('Por favor, preencha a data e as horas extras corretamente.');
-                return;
-            }
-
-            const extraHoursList = document.getElementById('extraHoursList');
-            const newEntry = document.createElement('div');
-            newEntry.className = 'extra-hours-entry';
-            newEntry.innerHTML = `
+        const extraHoursList = document.getElementById("extraHoursList");
+        const newEntry = document.createElement("div");
+        newEntry.className = "extra-hours-entry";
+        newEntry.innerHTML = `
                 <strong>Data:</strong> ${date} | 
                 <strong>Horas Extras:</strong> ${hours.toFixed(2)} horas
                 <button onclick="removeExtraHours(this)">Remover</button>
             `;
-            extraHoursList.appendChild(newEntry);
-        }
+        extraHoursList.appendChild(newEntry);
+      }
 
-        // Função para remover horas extras
-        function removeExtraHours(button) {
-            const entry = button.parentElement;
-            entry.remove();
-        }
+      // Função para remover horas extras
+      function removeExtraHours(button) {
+        const entry = button.parentElement;
+        entry.remove();
+      }
 
-        // Renderizar o calendário ao carregar a página
-        document.addEventListener('DOMContentLoaded', renderCalendar);
+      // Renderizar o calendário ao carregar a página
+      document.addEventListener("DOMContentLoaded", renderCalendar);
     </script>
-</body>
-
+  </body>
 </html>

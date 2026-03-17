@@ -106,14 +106,17 @@ body {
 
 /* Ajuste para o conteúdo principal */
 .container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   width: 100%;
-  max-width: 600px;
-  margin-top: 80px; /* Espaço para o navbar fixo */
-  margin-bottom: 20px; /* Espaço no final */
+  max-width: 1200px; /* Aumentado para suportar grid de colunas */
+  margin-top: 100px;
+  margin-bottom: 40px;
 }
 
 /* Hero Section */
@@ -128,16 +131,17 @@ body {
 }
 
 .hero-section h1 {
-  font-size: 4rem;
-  font-weight: bold;
+  font-size: 3.5rem;
+  font-weight: 800;
   margin-bottom: 20px;
-  color: #141313; /* Texto branco */
+  color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
 .hero-section p {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-bottom: 40px;
-  color: #131010; /* Texto branco */
+  color: var(--text-dim);
 }
 
 .cta-button {
@@ -163,17 +167,31 @@ body {
 /* Outros estilos (mantidos para referência) */
 label {
   display: block;
-  margin: 10px 0 5px;
-  color: #555;
+  margin: 10px 0 8px;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 input[type="number"],
-input[type="text"] {
+input[type="text"],
+input[type="date"],
+select {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  color: var(--text-main);
+  transition: border-color 0.2s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 button {
@@ -195,10 +213,11 @@ button:hover {
 }
 
 #results {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #e9f7ef;
-  border-radius: 4px;
+  margin-top: 30px;
+  padding: 24px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 12px;
 }
 
 #results p {
@@ -306,9 +325,10 @@ button:hover {
 
 .extra-hours-entry {
   margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
 }
 
 .extra-hours-entry button {

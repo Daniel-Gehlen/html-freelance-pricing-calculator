@@ -1,18 +1,45 @@
-# Documentos e arquivos locais
-*.txt
-*.pdf
-*.log
-*.tmp
+# Local Environment
+.env
+.env.local
+.env.*.local
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS Files
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+.project
+.settings/
+.classpath
 
-# Binários e imagens de demonstração
-# calc-freelancer.gif
-# image.png
+# Build and Temp
+dist/
+build/
+*.tmp
+*.log
+out/
+.vercel
+.netlify
 
-# Pasta de dados da IA (se estiver no repo)
+# AI and Agent Specific (Artifacts/Logs)
 .gemini/
 .agents/
 brain/
+.system_generated/
+*.md.tmp
+
+# Project Specific Docs (Local only)
+*.txt
+*.pdf
+# Keep screenshots if they are assets, ignore if they are temp
+# share-image.jpg
